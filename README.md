@@ -4,7 +4,7 @@
 
 **🚧🚧 YOU'RE EARLY.  WORK IN PROGRESS... 🚧🚧**
 
-*If you would like to express youself, head to the [Discussions board](https://github.com/collagejs/core/discussions).*
+*If you would like to express youself, head to the [Discussions board](https://github.com/collagejs/collagejs/discussions).*
 
 [Full Documentation](https://collagejs.dev)
 
