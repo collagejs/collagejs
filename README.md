@@ -55,13 +55,34 @@ Do you disagree with this?  Perhaps you need one and don't know which one would 
 
 In the end, it is your choice.
 
+## For the `single-spa` Savvy
+
+If you know/are used to `single-spa`, you're almost up to speed with *CollageJS*.  Basically, there's no concept of a "root config" project, but of course, there's always a "root" project.  Use whatever framework/technology you want to produce it.
+
+Then the micro-frontends:  The concept doesn't exist.  At this point (after creating a root UI project), you're 100% free to do as you wish.  Just mount *CollageJS pieces*, which are basically  the equivalent of `single-spa` parcels.  You don't get a router provided, you bring your own, or don't bring a router.  No worries.  Who says that a router is required?  Not us.  You can trigger "parcel" loading by any means at your disposal:  Button clicks, timers, window events, and yes, also location URL changes (routing) if you want.
+
+### Technical Differences
+
+While `single-spa` asks you to shape your module exports in a particular way (the lifecycle functions), *CollageJS* imposes no such restriction.  It is just not necessary.  Just make sure you can get an object of type `CorePiece` to the `<Piece>` component of your preferred framework.  Then use your framework's marvels to make the `<Piece>` component appear or disappear.
+
+Yes, you can still use import maps, and can even continue using the excellent `import-map-overrides` package.  It is encouraged.
+
+#### Where Did the `unmount` Lifecycle Function Go?
+
+In *CollageJS*, `CorePiece.mount()` returns the clean-up (unmounting) function.
+
+#### And What About `bootstrap`?
+
+Gone.  There's no equivalent in *CollageJS*, as experience with `single-spa` has demonstrated that is rarely needed, and if needed, one can do this initialization easily without having to impose the function requirement.  At least for now, there's no foreseeable future where an initialization function similar to `single-spa`'s `bootstrap()` will be defined.
+
 ## Packages
 
 | Package | Status | Description |
 | - | - | - |
 | `@collagejs/core` | ✔️ | Core functionality.  Provides the general mounting and unmouting logic. |
-| `@collagejs/vite` | ❌ | Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including spit CSS. |
+| `@collagejs/vite` | ❌ | Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including split CSS. |
 | `@collagejs/svelte` | ✔️ | Svelte component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/react` | ❌ | React component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/solidjs` | ❌ | SolidJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/vue` | ❌ | VueJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
+| `@collagejs/angular` | ❌ | **External help needed.**  We don't have expertise in Angular, nor do we want to acquire it.  If you're an Angular developer, please consider contributing. |
