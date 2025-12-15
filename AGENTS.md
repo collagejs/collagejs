@@ -14,7 +14,7 @@ The creator (José Pablo Ramírez Vargas) identified single-spa as the best micr
 ### Key Insights:
 1. Single-spa's router, while capable, is not optimal
 2. Single-spa-layout provides limited web component functionality with stagnant feature development
-3. The creator developed their own superior router: `@wjfe/n-savant` (Svelte v5 router)
+3. The creator developed their own superior router: `@svelte-router/core` (Svelte v5 router)
 4. Single-spa appears to be stagnating with reduced maintainer activity
 5. All micro-frontend needs can be satisfied using just single-spa parcels without the router
 6. **Factory Pattern Discovery**: Single-spa has a fundamental flaw where multiple instances of the same parcel cannot coexist due to shared state - factories solve this by creating isolated instances
@@ -70,19 +70,23 @@ interface CorePiece<TProps> {
 ## Project Structure
 
 ```
-@collagejs/core/
+@collagejs/collagejs/
 ├── src/
+|   ├── logos/             # Collection of CollageJS logos
+│   ├── common.ts          # Things used in more than one other module
 │   ├── index.ts           # Main exports
 │   ├── types.ts           # Core type definitions
 │   ├── mountPiece.ts      # Main mounting API
 │   ├── MountedPiece.ts    # Core piece management class
+│   ├── Stack.ts           # A stack implementation to ensure LIFO processing
 │   └── internal-types.ts  # Internal type definitions
 ├── tests/
 │   ├── ut/                # Unit tests (runtime behavior)
 │   ├── typetests/         # Type tests (TSTyche)
 │   └── setup.ts           # Test environment setup
 ├── package.json           # NPM package configuration
-└── tsconfig.json         # TypeScript configuration
+├── post-build.ps1         # Post-build operations
+└── tsconfig.json          # TypeScript configuration
 ```
 
 ## Technical Details
@@ -90,8 +94,10 @@ interface CorePiece<TProps> {
 - **Language**: TypeScript with ES2024 target
 - **Module System**: ES2022 modules
 - **License**: MIT
-- **Repository**: GitHub (collagejs/core)
+- **Repository**: GitHub (collagejs/collagejs)
 - **Build**: TypeScript compilation + publint validation
+
+> **NOTE**:  Although the repository name is "collagejs", it produces the package "@collagejs/core".
 
 ## Testing Guidelines
 

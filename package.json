@@ -20,10 +20,10 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/collagejs/core.git"
+    "url": "git+https://github.com/collagejs/collagejs.git"
   },
   "bugs": {
-    "url": "https://github.com/collagejs/core/issues"
+    "url": "https://github.com/collagejs/collagejs/issues"
   },
   "homepage": "https://collagejs.dev",
   "author": {
