@@ -1,0 +1,80 @@
+{
+  "name": "@collagejs/core",
+  "version": "0.1.0",
+  "description": "Core functionality for CollageJS.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "npm run test:unit && npm run test:types",
+    "test:unit": "ts-mocha -n loader=ts-node/esm -p ./tsconfig.json --require ./tests/setup.ts ./tests/ut/**/*.test.ts",
+    "test:watch": "ts-mocha -n loader=ts-node/esm -p ./tsconfig.json --require ./tests/setup.ts ./tests/ut/**/*.test.ts --watch",
+    "test:types": "tstyche ./tests/typetests",
+    "build": "tsc && pwsh -File ./post-build.ps1 && publint",
+    "check": "tsc --noEmit"
+  },
+  "keywords": [
+    "collage",
+    "collage-js",
+    "single-spa",
+    "micro-frontend"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/collagejs/core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/collagejs/core/issues"
+  },
+  "homepage": "https://collagejs.dev",
+  "author": {
+    "email": "webJose@gmail.com",
+    "name": "José Pablo Ramírez Vargas"
+  },
+  "license": "MIT",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./logo/16": {
+      "types": "./dist/logos/logo.d.ts",
+      "default": "./dist/logos/collagejs-16.svg"
+    },
+    "./logo/48": {
+      "types": "./dist/logos/logo.d.ts",
+      "default": "./dist/logos/collagejs-48.svg"
+    },
+    "./logo/64": {
+      "types": "./dist/logos/logo.d.ts",
+      "default": "./dist/logos/collagejs-64.svg"
+    },
+    "./logo/128": {
+      "types": "./dist/logos/logo.d.ts",
+      "default": "./dist/logos/collagejs-128.svg"
+    },
+    "./logo/512": {
+      "types": "./dist/logos/logo.d.ts",
+      "default": "./dist/logos/collagejs-512.svg"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "@types/chai": "^5.2.2",
+    "@types/jsdom": "^27.0.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^25.0.1",
+    "@types/sinon": "^21.0.0",
+    "chai": "^6.0.1",
+    "jsdom": "^27.3.0",
+    "mocha": "^11.7.2",
+    "publint": "^0.3.11",
+    "sinon": "^21.0.0",
+    "ts-mocha": "^11.1.0",
+    "ts-node": "^10.9.2",
+    "tstyche": "^5.0.2",
+    "typescript": "^5.8.2"
+  }
+}
