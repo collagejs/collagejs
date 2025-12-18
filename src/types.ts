@@ -28,7 +28,7 @@ export interface MountedPiece<TProps extends Record<string, any> = Record<string
 
 export type MountPiece<TProps extends Record<string, any> = Record<string, any>>
     = (
-        piece: CorePiece<TProps>,
+        piece: CorePiece<TProps> | Promise<CorePiece<TProps>>,
         target: HTMLElement,
         props?: TProps
     ) => Promise<MountedPiece<TProps>>;
