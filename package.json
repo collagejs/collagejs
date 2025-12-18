@@ -5,7 +5,7 @@
   "type": "module",
   "main": "./dist/index.js",
   "scripts": {
-    "test": "npm run test:unit && npm run test:types",
+    "test": "npm run check && npm run test:unit && npm run test:types",
     "test:unit": "ts-mocha -n loader=ts-node/esm -p ./tsconfig.json --require ./tests/setup.ts ./tests/ut/**/*.test.ts",
     "test:watch": "ts-mocha -n loader=ts-node/esm -p ./tsconfig.json --require ./tests/setup.ts ./tests/ut/**/*.test.ts --watch",
     "test:types": "tstyche ./tests/typetests",
