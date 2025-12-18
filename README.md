@@ -4,7 +4,7 @@
 
 **🚧🚧 YOU'RE EARLY.  WORK IN PROGRESS... ETA: Early January, 2026 🚧🚧**
 
-**If you're interested, star the repository to get updates on the progress in your GH homepage.**
+**If you're interested, star ⭐ the repository to get updates on the progress in your GH homepage.**
 
 *If you would like to express youself, head to the [Discussions board](https://github.com/collagejs/collagejs/discussions).*
 
@@ -138,7 +138,8 @@ Gone.  There's no equivalent in *CollageJS*, as experience with `single-spa` has
 | Package | Status | Links | Description |
 | - | - | - | - |
 | `@collagejs/core` | ✔️ | (This repo) | Core functionality.  Provides the general mounting and unmouting logic. |
-| `@collagejs/vite` | 🚧 | [Repo](https://github.com/collagejs/vite) | **Coming soon**.  Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including split CSS. |
+| `@collagejs/vite-css` | ✔️ | [Repo](https://github.com/collagejs/vite-css) | Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including split CSS.  It also features FOUC prevention. |
+| `@collagejs/vite-im` | 🚧 | [Repo](https://github.com/collagejs/vite-im) | **Coming soon**.  Vite plug-in that injects an import map and optionally the `import-map-overrides` package to define bare module identifiers for easy micro-frontend loading and debugging. |
 | `@collagejs/svelte` | ✔️ | [Repo](https://github.com/collagejs/svelte) | Svelte component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/react` | ❌ | [Repo](https://github.com/collagejs/react) | **Next priority**.  React component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/solidjs` | ❌ | [Repo](https://github.com/collagejs/vite) | SolidJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
