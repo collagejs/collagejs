@@ -2,15 +2,15 @@
 
 > Micro library for framework-agnostic micro-frontends
 
-**🚧🚧 YOU'RE EARLY.  WORK IN PROGRESS... ETA: Early January, 2026 🚧🚧**
+**🚧🚧 YOU'RE EARLY.  WORK IN PROGRESS... ETA: Early February, 2026 🚧🚧**
 
 **If you're interested, star ⭐ the repository to get updates on the progress in your GH homepage.**
 
-*If you would like to express youself, head to the [Discussions board](https://github.com/collagejs/collagejs/discussions).*
+*If you would like to express yourself, head to the [Discussions board](https://github.com/collagejs/collagejs/discussions).*
 
 [Full Documentation](https://collagejs.dev)
 
-*CollageJS* is a very, very small library that enables the composition of a web user interface with micro-frontends created with any technology (Svelte, React, Vue, Solid, HTMX, etc.).  It is heavily inspired by the *parcel* concept in the excellent `single-spa` routing library.
+*CollageJS* is a very, very small library that enables the composition of a web user interface with micro-frontends created with any technology (Svelte, React, Vue, SolidJS, HTMX, etc.).  It is heavily inspired by the *parcel* concept in the excellent `single-spa` routing library.
 
 ## How It Works
 
@@ -18,14 +18,10 @@
 
 ```typescript
 type UnmountFn = () => Promise<void>;
-type MountFn<TProps> = (target: HTMLElement, props?: TProps) => Promise<UnmountFn>;
-type Mount<TProps> = MountFn<TProps> | MountFn<TProps>[] | Mount<TProps>[];
-type UpdateFn<TProps> = (props: TProps) => Promise<void>;
-type Update<TProps> = UpdateFn<TProps> | UpdateFn<TProps>[] | Update[];
 
 interface CorePiece<TProps> {
-    mount: Mount<TProps>;
-    update?: Update<TProps>;
+    mount: (target: HTMLElement, props?: TProps) => Promise<UnmountFn>;
+    update?: (props: TProps) => Promise<void>;
 };
 ```
 > ℹ️ These types were simplified.  See the real ones after installing the library.
@@ -53,6 +49,7 @@ export function buildTestPiece<TProps extends Record<string, any> = Record<strin
 ): CorePiece<TProps> {
     let pre: HTMLElement;
     return {
+        // Here's mount():
         async mount(target: HTMLElement, props?: MountProps<TProps>) {
             const delayMountCb = callbacks?.mount?.(target, props);
             pre = document.createElement('pre');
@@ -63,12 +60,14 @@ export function buildTestPiece<TProps extends Record<string, any> = Record<strin
                 await delay();
                 delayMountCb();
             }
+            // Here's the unmounting function:
             return () => {
                 callbacks?.unmount?.();
                 target.removeChild(pre);
                 return Promise.resolve();
             };
         },
+        // Here's update():
         update(props: TProps) {
             callbacks?.update?.(props);
             pre.textContent = JSON.stringify(props, null, 2);
@@ -82,11 +81,11 @@ export function buildTestPiece<TProps extends Record<string, any> = Record<strin
 The key learnings here are:
 
 1. We can export functions that create *CollageJS* pieces.  This is the simplest and most flexible approach:  **Factory functions**.
-2. We do whatever we need to do to mount our user interface inside the target element.
+2. Inside `mount()`, we do whatever we need to do to mount our user interface inside the target element.
 3. We return a cleanup function that unmounts the user interface.
 4. We optionally provide the `update()` method for property reactivity.
 
-You can export from a single project as many of these factory functions as desired.  You are not constrained to expose just one *CollageJS* piece per project.  Export as many as needed.
+You can export from a single project as many of these factory functions as desired.  You are not constrained to expose just one *CollageJS* piece per project.  Export as many as needed/wanted.
 
 This is how packages like `@collagejs/svelte` work:  When mounting, it calls Svelte's `mount()` function with the given options (if any are given), and returns a cleanup function that calls `unmount()` on the component.  Updating properties is as simple as using a reactive object, at which point Svelte itself takes over the reacting part.
 
@@ -107,11 +106,27 @@ Maintenance is an issue.  The `single-spa` core team has had hard times trying t
 
 So, the conclusion here is:  *CollageJS* takes care of micro-frontends.  Just that.
 
-Do you disagree with this?  Perhaps you need a router and don't know which one would work best?  No problem!  We can recommend one:  Create a "root" **Vite + Svelte** project and use `@svelte-router/core` ([documentation](https://svelte-router.dev)).  This is a multi-route-matching router designed for micro-frontends.  It is very simple to use and learn, even if you have never used Svelte before.
+### Gimme a Router!
 
-**"But I don't want to learn Svelte"**, you might say.  Well, it's understandable.  However, if you're coming from a `single-spa` experience, learning a bit of Svelte to configure the root router is no different than learning `single-spa`'s layout web component.  Furthermore, the author of *CollageJS* is the author of `@svelte-router/core` as well.
+Ok, so you really want routing capabilities.  Understood.
 
-In the end, it is your choice.
+The creator of *CollageJS* has also created an advanced, highly efficient and unique client-side router that:
+
+- Matches multiple routes
+- Can simultaneously do path routing and hash fragment routing
+- Can support multiple named paths in the hash fragment
+- Can render any number of user interface pieces for a single route anywhere in the document
+- And many more features...
+
+[webJose's Svelte Router](https://svelte-router.dev) is our recommendation.  Furthermore, we provide a starter GitHub template repository to get you started quickly:  [Template Repository](https://github.com/collagejs/root-template)
+
+You can easily create a new *CollageJS* root project by telling GitHub to create a new repository for you using the above template.  Once you do that, you get a **Vite + Svelte + TS** project configured with the router and fully working.  The project, among other things, teaches:
+
+- How the router can be configured
+- How routers and routes are laid out in markup
+- How fallback content works
+
+> 🪤**The Catch**:  It is a Svelte project.  Ideally, you should know [Svelte](https://svelte.dev) to take full advantage of it.  With `single-spa`, you would have to learn how it worked, and how its layout web component worked.  With this one, you should learn at least a little Svelte.  Some learning curve on both sides.  The good thing about this one is that Svelte knowledge is much more far-reaching.  Svelte is very easy and fun.  We promise.
 
 ## For the `single-spa` Savvy
 
@@ -123,7 +138,11 @@ Then the micro-frontends:  The concept doesn't exist.  At this point (after crea
 
 While `single-spa` asks you to shape your module exports in a particular way (the lifecycle functions), *CollageJS* imposes no such restriction.  It is just not necessary.  Just make sure you can get an object of type `CorePiece` to the `<Piece>` component of your preferred framework.  Then use your framework's marvels to make the `<Piece>` component appear or disappear.
 
-Yes, you can still use import maps, and can even continue using the excellent `import-map-overrides` package.  It is encouraged.
+Yes, you'll still be working with import maps.  They are super handy.  We provide an enhanced (and simplified at the same time) version of `import-map-overrides` named `@collagejs/imo`.  It only supports the `overridable-importmap` type (and therefore only native import maps for native ES modules), but carries support for our `@collagejs/aim` plug-in that let's you statically import from micro-frontends.  **That's right!  We are free from dynamic `import()` calls!**  We can statically import from micro-frontends.  Furthermore, it has a more modern user interface:
+
+![Main screen of @collagejs/imo](./_docs/collagejs-imo.png)
+
+> 🌟 **Fun Fact**:  This user interface is a *CollageJS* piece.
 
 #### Where Did the `unmount` Lifecycle Function Go?
 
@@ -137,11 +156,20 @@ Gone.  There's no equivalent in *CollageJS*, as experience with `single-spa` has
 
 | Package | Status | Links | Description |
 | - | - | - | - |
-| `@collagejs/core` | ✔️ | (This repo) | Core functionality.  Provides the general mounting and unmouting logic. |
-| `@collagejs/vite-css` | ✔️ | [Repo](https://github.com/collagejs/vite-css) | Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including split CSS.  It also features FOUC prevention. |
-| `@collagejs/vite-im` | 🚧 | [Repo](https://github.com/collagejs/vite-im) | **Coming soon**.  Vite plug-in that injects an import map and optionally the `import-map-overrides` package to define bare module identifiers for easy micro-frontend loading and debugging. |
+| `@collagejs/core` | ✔️ | (This repo) | Core functionality.  Provides the general mounting and unmounting logic. |
+| `@collagejs/vite-css` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including split CSS.  It also features FOUC prevention. |
+| `@collagejs/vite-im` | 🚧 | [Repo](https://github.com/collagejs/vite) | **Coming soon**.  Vite plug-in that injects an import map and optionally the `import-map-overrides` package to define bare module identifiers for easy micro-frontend loading and debugging. |
+| `@collagejs/vite-aim` | 🚧 | [Repo](https://github.com/collagejs/vite) | **Coming soon**.  Vite-plugin that gives the Vite development server the ability to accept import maps from the client, which are used to resolve modules in the Vite pipeline, enabling static imports from micro-frontend bare module identifiers. |
+| `@collagejs/imo` | 🚧 | [Repo](https://github.com/collagejs/imo) | **Coming soon**.  Our version of `import-map-overrides` that does the usual overriding of import map entries, plus it transmits the final import map to Vite development servers found in it. |
 | `@collagejs/svelte` | ✔️ | [Repo](https://github.com/collagejs/svelte) | Svelte component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/react` | ❌ | [Repo](https://github.com/collagejs/react) | **Next priority**.  React component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/solidjs` | ❌ | [Repo](https://github.com/collagejs/vite) | SolidJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/vue` | ❌ | [Repo](https://github.com/collagejs/vue) | VueJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/angular` | ❌ | | **External help needed.**  We don't have expertise in Angular, nor do we want to acquire it.  If you're an Angular developer, please consider contributing. |
+
+## Other Repositories
+
+| Repository | Description |
+| - | - |
+| [Root Template](https://github.com/collagejs/root-template) | Root template repository that can be used to create new repositories for *CollageJS* root projects, with client-side routing already configured. |
+| (-) | Repository of *CollageJS* pieces made in various front-end technologies for your reference and inspiration. |
