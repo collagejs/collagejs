@@ -1,0 +1,26 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+charset = utf-8
+
+# 4 spaces for JavaScript, TypeScript, and Svelte files
+[*.{js,jsx,ts,tsx,svelte}]
+indent_style = space
+indent_size = 4
+
+# 2 spaces for JSON and YAML files
+[*.{json,yml,yaml,css,scss,html}]
+indent_style = space
+indent_size = 2
+
+# Match package.json specifically (often has different conventions)
+[package.json]
+indent_style = space
+indent_size = 2
