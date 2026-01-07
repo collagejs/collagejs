@@ -43,12 +43,6 @@ interface CorePiece<TProps> {
 
 ### Core Components
 
-#### `CollageModule` Pattern
-- **Factory-Based Architecture**: Modules export factory functions instead of singleton instances
-- **Multiple Instance Support**: Solves single-spa's inability to handle multiple instances of the same parcel
-- **Optional Bootstrap**: Module-level initialization with cleanup (following side-effect avoidance principles)
-- **Tree-Shaking Friendly**: Only executes code when functions are called
-
 #### `MountedPiece` Class
 - Manages the lifecycle of mounted pieces
 - Tracks parent-child relationships with unique IDs (counter-based generation)

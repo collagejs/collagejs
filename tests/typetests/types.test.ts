@@ -1,13 +1,10 @@
 import { describe, test, expect } from "tstyche";
-import type { 
-    CorePiece, 
-    MountFn, 
-    UpdateFn, 
-    Mount, 
-    Update, 
-    CollageModule, 
-    FactoryFnUntyped,
-    Factories
+import type {
+    CorePiece,
+    MountFn,
+    UpdateFn,
+    Mount,
+    Update,
 } from "../../src/types.js";
 
 describe("CorePiece", () => {
@@ -90,45 +87,5 @@ describe("Update type", () => {
             async (props: { message: string }) => {}
         ];
         expect(arrayUpdate).type.toBeAssignableTo<Update<{ message: string }>>();
-    });
-});
-
-describe("Factory functions", () => {
-    test("Should validate FactoryFnUntyped.", () => {
-        const untypedFactory: FactoryFnUntyped = async () => ({
-            mount: async (target: HTMLElement) => async () => {}
-        });
-        expect(untypedFactory).type.toBe<FactoryFnUntyped>();
-    });
-
-    test("Should validate Factories record.", () => {
-        const factories: Factories = {
-            "component1": async () => ({
-                mount: async (target: HTMLElement) => async () => {}
-            })
-        };
-        expect(factories).type.toBe<Factories>();
-    });
-});
-
-describe("CollageModule", () => {
-    test("Should validate complete module structure.", () => {
-        const module: CollageModule = {
-            bootstrap: async () => {},
-            unload: async () => {},
-            factories: {
-                "component1": async () => ({
-                    mount: async (target: HTMLElement) => async () => {}
-                })
-            }
-        };
-        expect(module).type.toBe<CollageModule>();
-    });
-
-    test("Should require all properties.", () => {
-        expect<CollageModule>().type.not.toBeAssignableTo({
-            bootstrap: async () => {}
-            // Missing unload and factories
-        });
     });
 });
