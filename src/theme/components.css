@@ -1,0 +1,506 @@
+/**
+ * CollageJS Theme - Component Styles
+ *
+ * This file defines reusable component styles using the color variables.
+ */
+
+/* ===== CODE ELEMENTS ===== */
+
+[data-collagejs-theme] code,
+.cjs-themed code {
+  background: var(--cjs-highlight);
+  border: 1px solid var(--cjs-border);
+  border-radius: var(--cjs-radius);
+  padding: 0.2rem 0.4rem;
+}
+
+/* ===== BUTTONS ===== */
+
+/* Base button styles */
+.cjs-btn {
+  --cjs-btn-color: var(--cjs-text);
+  --cjs-btn-background: transparent;
+  background: var(--cjs-btn-background);
+  color: var(--cjs-btn-color);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--cjs-radius);
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+
+  /* Focus styles */
+  &:focus {
+    outline: 0;
+    box-shadow: 0 0 0 3px rgba(var(--cjs-primary-rgb), 0.4);
+  }
+
+  /* Disabled state */
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+/* Primary button */
+.cjs-btn-primary {
+  --cjs-btn-background: var(--cjs-primary-gradient);
+  --cjs-btn-color: var(--cjs-text-on-primary);
+  --cjs-btn-semantic-color: var(--cjs-primary);
+  --cjs-btn-color-rgb: var(--cjs-primary-rgb);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    background: linear-gradient(135deg, var(--cjs-primary-600), var(--cjs-primary-800));
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active,
+  &.active {
+    background: linear-gradient(135deg, var(--cjs-primary-700), var(--cjs-primary-900));
+    transform: translateY(1px);
+  }
+
+  &:focus {
+    outline-color: var(--cjs-primary-300);
+  }
+}
+
+/* Secondary button */
+.cjs-btn-secondary {
+  --cjs-btn-background: var(--cjs-secondary-gradient);
+  --cjs-btn-color: var(--cjs-text-on-secondary);
+  --cjs-btn-semantic-color: var(--cjs-secondary);
+  --cjs-btn-color-rgb: var(--cjs-secondary-rgb);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+
+  &:hover {
+    opacity: 0.9;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  &:active,
+  &.active {
+    opacity: 0.8;
+    transform: translateY(1px);
+  }
+}
+
+/* Outline button */
+.cjs-btn-outline {
+  color: var(--cjs-btn-color);
+  background: transparent;
+  border-color: var(--cjs-btn-color);
+
+  &:hover {
+    background: var(--cjs-primary);
+    color: var(--cjs-text-on-primary);
+  }
+
+  &:active,
+  &.active {
+    background: var(--cjs-primary-600);
+    color: var(--cjs-text-on-primary);
+  }
+}
+
+/* Neutral button - blends with any background, no color contribution */
+/* Perfect for table actions, toolbars, and context-sensitive controls */
+.cjs-btn-neutral {
+  background: transparent;
+  color: var(--cjs-text);
+  border-color: transparent;
+
+  &:hover {
+    background: var(--cjs-highlight);
+  }
+
+  &:active,
+  &.active {
+    background: color-mix(in srgb, var(--cjs-highlight), black 20%);
+  }
+}
+
+/* Ghost button - transparent with semantic color on interaction */
+/* Combine with semantic modifiers: .cjs-btn-ghost.cjs-btn-primary */
+.cjs-btn-ghost {
+  background: transparent;
+  color: var(--cjs-btn-semantic-color);
+  border-color: transparent;
+
+  &:hover {
+    background: rgba(var(--cjs-btn-color-rgb), 0.1);
+  }
+
+  &:active,
+  &.active {
+    background: var(--cjs-btn-semantic-color);
+    color: var(--cjs-btn-color);
+  }
+}
+
+/* Success button */
+.cjs-btn-success {
+  --cjs-btn-background: var(--cjs-accent-gradient);
+  --cjs-btn-color: var(--cjs-text-on-primary);
+  --cjs-btn-semantic-color: var(--cjs-accent);
+  --cjs-btn-color-rgb: var(--cjs-accent-rgb);
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active,
+  &.active {
+    opacity: 0.8;
+    transform: translateY(1px);
+  }
+}
+
+/* Warning button */
+.cjs-btn-warning {
+  --cjs-btn-background: var(--cjs-warning-gradient);
+  --cjs-btn-color: var(--cjs-text-on-primary);
+  --cjs-btn-semantic-color: var(--cjs-warning);
+  --cjs-btn-color-rgb: var(--cjs-warning-rgb);
+
+  &:hover {
+    opacity: 0.9;
+  }
+
+  &:active,
+  &.active {
+    opacity: 0.8;
+    transform: translateY(1px);
+  }
+}
+
+/* Button with logo */
+.cjs-btn-with-logo {
+  .cjs-logo {
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+  }
+}
+
+/* Button sizes */
+.cjs-btn-sm {
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+
+  .cjs-logo {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+}
+
+.cjs-btn-lg {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+
+  .cjs-logo {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+}
+
+/* ===== FORMS ===== */
+
+.cjs-input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--cjs-border);
+  border-radius: var(--cjs-radius);
+  background: var(--cjs-background);
+  color: var(--cjs-text);
+  font-size: 0.875rem;
+  transition: all 0.2s ease-in-out;
+
+  &:focus {
+    outline: 2px solid var(--cjs-primary-200);
+    outline-offset: -1px;
+    border-color: var(--cjs-primary);
+  }
+
+  &::placeholder {
+    color: var(--cjs-text-muted);
+  }
+}
+
+/* Darker input backgrounds on colored theme backgrounds */
+.cjs-bg-primary input, .cjs-bg-primary select, .cjs-bg-primary textarea,
+.cjs-bg-secondary input, .cjs-bg-secondary select, .cjs-bg-secondary textarea,
+.cjs-bg-accent input, .cjs-bg-accent select, .cjs-bg-accent textarea,
+.cjs-bg-warning input, .cjs-bg-warning select, .cjs-bg-warning textarea,
+.cjs-bg-indigo input, .cjs-bg-indigo select, .cjs-bg-indigo textarea,
+.cjs-bg-cyan input, .cjs-bg-cyan select, .cjs-bg-cyan textarea,
+.cjs-bg-green input, .cjs-bg-green select, .cjs-bg-green textarea,
+.cjs-bg-orange input, .cjs-bg-orange select, .cjs-bg-orange textarea {
+  background: rgba(var(--cjs-black-rgb), 0.15);
+  color: var(--cjs-text-on-primary);
+}
+
+/* Range inputs */
+[data-collagejs-theme] input[type="range"],
+.cjs-themed input[type="range"] {
+  accent-color: var(--cjs-primary);
+
+  /* Track styling - cross-browser */
+  &::-webkit-slider-runnable-track {
+    height: 0.5rem;
+  }
+
+  &::-moz-range-track {
+    height: 0.5rem;
+  }
+
+  /* Thumb styling - cross-browser */
+  &::-webkit-slider-thumb {
+    background: var(--cjs-primary);
+    border: 2px solid var(--cjs-background);
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    cursor: pointer;
+    translate: 0 -25%;
+  }
+
+  &::-moz-range-thumb {
+    background: var(--cjs-primary);
+    border: 2px solid var(--cjs-background);
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+    cursor: pointer;
+    translate: 0 -25%;
+  }
+}
+
+/* ===== CARDS ===== */
+
+.cjs-card {
+  background: var(--cjs-background);
+  border: 1px solid var(--cjs-border);
+  border-radius: var(--cjs-radius-lg);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.cjs-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--cjs-border);
+  background: var(--cjs-surface);
+}
+
+.cjs-card-body {
+  padding: 1.5rem;
+}
+
+.cjs-card-footer {
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--cjs-border);
+  background: var(--cjs-surface);
+}
+/* ===== Button Group ===== */
+
+.cjs-btn-group {
+  display: inline-flex;
+  border-radius: var(--cjs-radius);
+
+  .cjs-btn {
+    position: relative;
+    border-radius: 0;
+    margin: 0;
+
+    &:first-child {
+      border-top-left-radius: var(--cjs-radius);
+      border-bottom-left-radius: var(--cjs-radius);
+    }
+
+    &:last-child {
+      border-top-right-radius: var(--cjs-radius);
+      border-bottom-right-radius: var(--cjs-radius);
+    }
+
+    &:focus {
+      z-index: 1;
+    }
+  }
+}
+
+/* ===== Input Group ===== */
+
+.cjs-input-group {
+  display: flex;
+  align-items: stretch;
+  border-radius: 0.375rem;
+
+  &>* {
+    border-radius: 0;
+  }
+
+  &>select:first-child,
+  &>input:first-child,
+  &>textarea:first-child,
+  &>button:first-child,
+  &>.cjs-addon:first-child {
+    border-top-left-radius: 0.375rem;
+    border-bottom-left-radius: 0.375rem;
+  }
+
+  &>select:last-child,
+  &>input:last-child,
+  &>textarea:last-child,
+  &>button:last-child,
+  &>.cjs-addon:last-child {
+    border-top-right-radius: 0.375rem;
+    border-bottom-right-radius: 0.375rem;
+  }
+
+  .cjs-input {
+    margin: 0;
+    flex: 1 1 auto;
+  }
+
+  .cjs-addon {
+    border: 1px solid var(--cjs-border);
+    padding: 0.25rem 0.4rem;
+  }
+}
+
+/* ===== Tabs ===== */
+
+ul.cjs-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+  border-bottom: 1px solid var(--cjs-border);
+
+  &>li {
+    margin-bottom: -1px;
+    padding: 0 0.2rem 0.3rem 0.2rem;
+
+    &>button {
+      background: transparent;
+      border-width: 0;
+      border-color: var(--cjs-primary);
+      border-style: solid;
+      cursor: pointer;
+      padding: 0.5rem 0.5rem 0.2rem 0.5rem;
+      color: var(--cjs-text);
+
+      &:hover,
+      &:focus {
+        border-bottom-width: 0.1rem;
+      }
+
+      &.active {
+        border-bottom-width: 0.3rem;
+        font-weight: bold;
+      }
+    }
+  }
+}
+
+.cjs-tab-panel {
+  padding: 1rem;
+  margin-bottom: 1rem;
+
+  &>* {
+    margin-top: 0;
+  }
+}
+
+/* ===== Table ===== */
+
+.cjs-table {
+  width: 100%;
+  margin-bottom: 1rem;
+  color: var(--cjs-text);
+  border-collapse: collapse;
+
+  & thead>tr {
+    border-bottom: 1px solid var(--cjs-border);
+  }
+
+  & th {
+    text-align: left;
+    font-weight: normal;
+  }
+
+  &.striped {
+    tbody tr:nth-of-type(odd) {
+      background-color: var(--cjs-surface);
+    }
+  }
+
+  &.compact {
+    th,
+    td {
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  &.normal {
+    th,
+    td {
+      padding: 0.5rem 1rem;
+    }
+  }
+
+  &.spacious {
+    th,
+    td {
+      padding: 1rem 1.5rem;
+    }
+  }
+}
+
+/* ===== Badges ===== */
+
+.cjs-badge {
+  display: inline-block;
+  padding: 0.05em 0.5em;
+  font-size: 0.75em;
+  font-weight: 600;
+  border-radius: var(--cjs-radius);
+}
+
+.cjs-badge-primary {
+  background: var(--cjs-primary);
+  color: var(--cjs-text-on-primary);
+}
+
+.cjs-badge-secondary {
+  background: var(--cjs-secondary-100);
+  color: var(--cjs-secondary-800);
+}
+
+.cjs-badge-accent {
+  background: var(--cjs-accent-100);
+  color: var(--cjs-accent-800);
+}
+
+.cjs-badge-warning {
+  background: var(--cjs-warning-100);
+  color: var(--cjs-warning-800);
+}
+
+.cjs-badge-error {
+  background: var(--cjs-error-100);
+  color: var(--cjs-error-800);
+}
+

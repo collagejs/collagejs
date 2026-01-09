@@ -1,0 +1,66 @@
+/**
+ * CollageJS Theme - Main Theme File
+ *
+ * Import this file to use the complete CollageJS theme system.
+ *
+ * MICRO-FRONTEND USAGE:
+ * ```html
+ * <link rel="stylesheet" href="path/to/collagejs/theme.css">
+ *
+ * <!-- Apply theme to any container -->
+ * <div data-collagejs-theme class="cjs-theme-accent"> <!-- Orange primary -->
+ * <div class="cjs-themed cjs-theme-sky">            <!-- Cyan primary -->
+ * <div id="my-app" class="cjs-theme-nature">       <!-- Green primary -->
+ *
+ * <!-- Shadow DOM -->
+ * <my-component>
+ *   #shadow-root
+ *     <div data-collagejs-theme class="cjs-theme-dark">
+ *       <!-- Isolated theming -->
+ *     </div>
+ * </my-component>
+ *
+ * <!-- Custom selectors (define your own CSS variables) -->
+ * <div data-collagejs-imo> <!-- Your custom attribute -->
+ * ```
+ */
+
+/* Import all theme modules */
+@import url('./base.css');
+@import url('./colors.css');
+@import url('./components.css');
+@import url('./utilities.css');
+@import url('./variants.css');
+
+/* Global base styles for theme containers */
+[data-collagejs-theme] *,
+[data-collagejs-theme] *::before,
+[data-collagejs-theme] *::after,
+.cjs-themed *,
+.cjs-themed *::before,
+.cjs-themed *::after {
+  box-sizing: border-box;
+}
+
+/* Default font and text styles for themed containers */
+[data-collagejs-theme],
+.cjs-themed {
+  font-family: var(--cjs-font-sans);
+  line-height: 1.5;
+  color-scheme: light dark;
+  color: var(--cjs-text);
+  background: var(--cjs-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  & dialog, & input, & textarea, & select {
+    background: var(--cjs-background);
+    color: var(--cjs-text);
+  }
+}
+
+/* Remove margin for themed containers (they might be nested) */
+[data-collagejs-theme],
+.cjs-themed {
+  margin: 0;
+}

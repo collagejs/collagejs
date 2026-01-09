@@ -1,0 +1,189 @@
+/**
+ * CollageJS Theme - Utility Classes
+ *
+ * This file provides utility classes for common styling patterns.
+ */
+
+/* ===== COLORS ===== */
+
+/* Text colors */
+.cjs-text-primary { color: var(--cjs-primary); }
+.cjs-text-secondary { color: var(--cjs-secondary); }
+.cjs-text-accent { color: var(--cjs-accent); }
+.cjs-text-warning { color: var(--cjs-warning); }
+.cjs-text-success { color: var(--cjs-success); }
+.cjs-text-error { color: var(--cjs-error); }
+.cjs-text-muted { color: var(--cjs-text-muted); }
+.cjs-text-white { color: var(--cjs-white); }
+
+/* Contrasting text colors - solves the "what text color goes with X background?" problem */
+.cjs-text-on-light { color: var(--cjs-text-on-light); }        /* Dark text for light backgrounds */
+.cjs-text-on-dark { color: var(--cjs-text-on-dark); }          /* Light text for dark backgrounds */
+.cjs-text-on-primary { color: var(--cjs-text-on-primary); }    /* Contrasting text for primary BG */
+.cjs-text-on-secondary { color: var(--cjs-text-on-secondary); } /* Contrasting text for secondary BG */
+
+/* Background colors with opacity support */
+.cjs-bg-primary { background: rgba(var(--cjs-primary-rgb), var(--cjs-bg-opacity)); }
+.cjs-bg-secondary { background: rgba(var(--cjs-secondary-rgb), var(--cjs-bg-opacity)); }
+.cjs-bg-accent { background: rgba(var(--cjs-accent-rgb), var(--cjs-bg-opacity)); }
+.cjs-bg-warning { background: rgba(var(--cjs-warning-rgb), var(--cjs-bg-opacity)); }
+.cjs-bg-success { background: rgba(var(--cjs-success-rgb), var(--cjs-bg-opacity)); }
+.cjs-bg-error { background: rgba(var(--cjs-error-rgb), var(--cjs-bg-opacity)); }
+.cjs-bg-surface { background: var(--cjs-surface); }
+.cjs-bg-white { background: var(--cjs-white); }
+
+/* Brand color backgrounds (theme-agnostic, always the same color) */
+.cjs-bg-indigo {
+  --cjs-background: rgba(var(--cjs-brand-indigo-start-rgb), var(--cjs-bg-opacity)) !important;
+  &.cjs-glass {
+    --cjs-background: rgba(var(--cjs-brand-indigo-start-rgb), var(--cjs-glass-bg-opacity)) !important;
+  }
+}
+.cjs-bg-cyan {
+  --cjs-background: rgba(var(--cjs-brand-cyan-start-rgb), var(--cjs-bg-opacity)) !important;
+  &.cjs-glass {
+    --cjs-background: rgba(var(--cjs-brand-cyan-start-rgb), var(--cjs-glass-bg-opacity)) !important;
+  }
+}
+.cjs-bg-green {
+  --cjs-background: rgba(var(--cjs-brand-green-start-rgb), var(--cjs-bg-opacity)) !important;
+  &.cjs-glass {
+    --cjs-background: rgba(var(--cjs-brand-green-start-rgb), var(--cjs-glass-bg-opacity)) !important;
+  }
+}
+.cjs-bg-orange {
+  --cjs-background: rgba(var(--cjs-brand-orange-start-rgb), var(--cjs-bg-opacity)) !important;
+  &.cjs-glass {
+    --cjs-background: rgba(var(--cjs-brand-orange-start-rgb), var(--cjs-glass-bg-opacity)) !important;
+  }
+}
+
+/* Background + text combinations that are guaranteed to work together */
+.cjs-contrast-light {
+  background: var(--cjs-contrast-light-bg);
+  color: var(--cjs-contrast-light-text);
+}
+.cjs-contrast-dark {
+  background: var(--cjs-contrast-dark-bg);
+  color: var(--cjs-contrast-dark-text);
+}
+
+/* Gradient backgrounds */
+.cjs-bg-primary-gradient {
+  background: var(--cjs-primary-gradient);
+  color: var(--cjs-text-on-primary);
+}
+.cjs-bg-secondary-gradient {
+  background: var(--cjs-secondary-gradient);
+  color: var(--cjs-text-on-secondary);
+}
+.cjs-bg-accent-gradient {
+  background: var(--cjs-accent-gradient);
+  color: var(--cjs-text-on-primary);
+}
+.cjs-bg-warning-gradient {
+  background: var(--cjs-warning-gradient);
+  color: var(--cjs-text-on-primary);
+}
+
+/* Border colors */
+.cjs-border-primary { border-color: var(--cjs-primary); }
+.cjs-border-secondary { border-color: var(--cjs-secondary); }
+.cjs-border-default { border-color: var(--cjs-border); }
+
+/* ===== SPACING ===== */
+.cjs-p-0 { padding: 0; }
+.cjs-p-1 { padding: 0.25rem; }
+.cjs-p-2 { padding: 0.5rem; }
+.cjs-p-3 { padding: 0.75rem; }
+.cjs-p-4 { padding: 1rem; }
+.cjs-p-6 { padding: 1.5rem; }
+.cjs-p-8 { padding: 2rem; }
+
+.cjs-m-0 { margin: 0; }
+.cjs-m-1 { margin: 0.25rem; }
+.cjs-m-2 { margin: 0.5rem; }
+.cjs-m-3 { margin: 0.75rem; }
+.cjs-m-4 { margin: 1rem; }
+.cjs-m-6 { margin: 1.5rem; }
+.cjs-m-8 { margin: 2rem; }
+
+/* ===== LAYOUT ===== */
+.cjs-flex { display: flex; }
+.cjs-grid { display: grid; }
+.cjs-block { display: block; }
+.cjs-inline { display: inline; }
+.cjs-inline-block { display: inline-block; }
+.cjs-hidden { display: none; }
+
+.cjs-flex-row { flex-direction: row; }
+.cjs-flex-col { flex-direction: column; }
+
+.cjs-items-center { align-items: center; }
+.cjs-items-start { align-items: flex-start; }
+.cjs-items-end { align-items: flex-end; }
+.cjs-items-baseline { align-items: baseline; }
+
+.cjs-justify-center { justify-content: center; }
+.cjs-justify-between { justify-content: space-between; }
+.cjs-justify-around { justify-content: space-around; }
+.cjs-justify-start { justify-content: flex-start; }
+.cjs-justify-end { justify-content: flex-end; }
+
+.cjs-gap-1 { gap: 0.25rem; }
+.cjs-gap-2 { gap: 0.5rem; }
+.cjs-gap-3 { gap: 0.75rem; }
+.cjs-gap-4 { gap: 1rem; }
+.cjs-gap-6 { gap: 1.5rem; }
+
+.cjs-grow { flex-grow: 1; }
+.cjs-shrink { flex-shrink: 1; }
+.cjs-no-grow { flex-grow: 0; }
+
+/* ===== BORDERS ===== */
+.cjs-rounded { border-radius: var(--cjs-radius-sm); }
+.cjs-rounded-md { border-radius: var(--cjs-radius); }
+.cjs-rounded-lg { border-radius: var(--cjs-radius-lg); }
+.cjs-rounded-xl { border-radius: var(--cjs-radius-xl); }
+.cjs-rounded-pill { border-radius: var(--cjs-radius-pill); }
+.cjs-rounded-circle { border-radius: var(--cjs-radius-circle); }
+
+.cjs-border { border: 1px solid var(--cjs-border); }
+.cjs-border-2 { border: 2px solid var(--cjs-border); }
+.cjs-border-0 { border: none; }
+
+/* ===== SHADOWS ===== */
+.cjs-shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
+.cjs-shadow { box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1); }
+.cjs-shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1); }
+.cjs-shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1); }
+.cjs-shadow-none { box-shadow: none; }
+
+/* ===== LOGO UTILITIES ===== */
+.cjs-logo {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.cjs-logo-16 { width: 1rem; height: 1rem; }
+.cjs-logo-48 { width: 3rem; height: 3rem; }
+.cjs-logo-64 { width: 4rem; height: 4rem; }
+.cjs-logo-128 { width: 8rem; height: 8rem; }
+.cjs-logo-512 { width: 32rem; height: 32rem; }
+
+/* ===== TYPOGRAPHY ===== */
+.cjs-text-xs { font-size: 0.75rem; line-height: 1rem; }
+.cjs-text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+.cjs-text-base { font-size: 1rem; line-height: 1.5rem; }
+.cjs-text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+.cjs-text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+.cjs-text-2xl { font-size: 1.5rem; line-height: 2rem; }
+.cjs-text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+
+.cjs-font-light { font-weight: 300; }
+.cjs-font-normal { font-weight: 400; }
+.cjs-font-medium { font-weight: 500; }
+.cjs-font-semibold { font-weight: 600; }
+.cjs-font-bold { font-weight: 700; }
+
+.cjs-font-mono { font-family: var(--cjs-font-mono, monospace); }

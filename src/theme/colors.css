@@ -1,0 +1,181 @@
+/**
+ * CollageJS Theme - Color Definitions
+ * 
+ * This file defines the color palette using CSS custom properties.
+ * Colors are sourced from the CollageJS logo gradients.
+ * 
+ * MICRO-FRONTEND READY: Use any selector to scope your theme.
+ * Examples:
+ * - [data-collagejs-theme] { ... }
+ * - .my-app { ... }
+ * - #my-micro-frontend { ... }
+ * - .cjs-themed { ... }
+ */
+
+/* ===== DEFAULT THEME CONTAINER ===== */
+/* You can replace this selector with your own scoping selector */
+[data-collagejs-theme],
+.cjs-themed {
+  /* ===== BRAND COLORS ===== */
+  /* These are the 8 colors from your CollageJS logo gradients */
+  
+  /* Primary Gradient (Indigo-Purple) */
+  --cjs-brand-indigo-start: #4F46E5;
+  --cjs-brand-indigo-start-rgb: 79, 70, 229;
+  --cjs-brand-indigo-end: #7C3AED;
+  --cjs-brand-indigo-end-rgb: 124, 58, 237;
+  
+  /* Secondary Gradient (Cyan-Blue) */
+  --cjs-brand-cyan-start: #06B6D4;
+  --cjs-brand-cyan-start-rgb: 6, 182, 212;
+  --cjs-brand-cyan-end: #0EA5E9;
+  --cjs-brand-cyan-end-rgb: 14, 165, 233;
+  
+  /* Accent Gradient (Green) */
+  --cjs-brand-green-start: #10B981;
+  --cjs-brand-green-start-rgb: 16, 185, 129;
+  --cjs-brand-green-end: #059669;
+  --cjs-brand-green-end-rgb: 5, 150, 105;
+  
+  /* Warning Gradient (Orange) */
+  --cjs-brand-orange-start: #F59E0B;
+  --cjs-brand-orange-start-rgb: 245, 158, 11;
+  --cjs-brand-orange-end: #D97706;
+  --cjs-brand-orange-end-rgb: 217, 119, 6;
+  
+  /* ===== OPACITY SYSTEM (Bootstrap-style) ===== */
+  /* Configure these to achieve glass effects and transparency */
+  --cjs-bg-opacity: 1;
+  --cjs-border-opacity: 1;
+  --cjs-text-opacity: 1;
+  --cjs-highlight-opacity: 0.11;
+  
+  /* ===== CONTRASTING FOREGROUND COLORS ===== */
+  /* Solve the "what text color goes with this background?" problem */
+  
+  /* For use on LIGHT backgrounds (so these are dark colors) */
+  --cjs-foreground-on-light: #1F2937;              /* Dark gray with subtle cool tone */
+  --cjs-foreground-on-light-rgb: 31, 41, 55;
+  --cjs-foreground-on-light-muted: #4B5563;        /* Lighter version for secondary text */
+  --cjs-foreground-on-light-muted-rgb: 75, 85, 99;
+  
+  /* For use on DARK backgrounds (so these are light colors) */
+  --cjs-foreground-on-dark: #F9FAFB;               /* Soft white with subtle warmth */
+  --cjs-foreground-on-dark-rgb: 249, 250, 251;
+  --cjs-foreground-on-dark-muted: #D1D5DB;         /* Darker version for secondary text */
+  --cjs-foreground-on-dark-muted-rgb: 209, 213, 219;
+  
+  /* Perfect contrast pairs - these work beautifully together */
+  --cjs-contrast-light-bg: var(--cjs-foreground-on-dark);      /* Light background */
+  --cjs-contrast-light-bg-rgb: var(--cjs-foreground-on-dark-rgb);
+  --cjs-contrast-light-text: var(--cjs-foreground-on-light);   /* Dark text */
+  --cjs-contrast-light-text-rgb: var(--cjs-foreground-on-light-rgb);
+  --cjs-contrast-dark-bg: var(--cjs-foreground-on-light);      /* Dark background */
+  --cjs-contrast-dark-bg-rgb: var(--cjs-foreground-on-light-rgb);
+  --cjs-contrast-dark-text: var(--cjs-foreground-on-dark);     /* Light text */
+  --cjs-contrast-dark-text-rgb: var(--cjs-foreground-on-dark-rgb);
+  
+  /* ===== GLASS EFFECT SYSTEM ===== */
+  /* Configurable for accessibility - users can adjust to their needs */
+  --cjs-glass-blur: 9px;          /* Blur intensity (0px = no blur) */
+  --cjs-glass-saturation: 120%;   /* Color saturation (100% = normal) */
+  --cjs-glass-bg-opacity: 0.1;    /* Background transparency */
+  --cjs-glass-border-opacity: 0.2; /* Border transparency */
+  
+  /* ===== THEME COLORS (Configurable) ===== */
+  /* Override these in theme variants to create different looks */
+  
+  /* Primary colors - defaults to indigo */
+  --cjs-primary: var(--cjs-brand-indigo-start);
+  --cjs-primary-rgb: var(--cjs-brand-indigo-start-rgb);
+  --cjs-primary-end: var(--cjs-brand-indigo-end);
+  --cjs-primary-end-rgb: var(--cjs-brand-indigo-end-rgb);
+  --cjs-primary-gradient: linear-gradient(135deg, var(--cjs-primary), var(--cjs-primary-end));
+  
+  /* Secondary colors - defaults to cyan */
+  --cjs-secondary: var(--cjs-brand-cyan-start);
+  --cjs-secondary-rgb: var(--cjs-brand-cyan-start-rgb);
+  --cjs-secondary-end: var(--cjs-brand-cyan-end);
+  --cjs-secondary-end-rgb: var(--cjs-brand-cyan-end-rgb);
+  --cjs-secondary-gradient: linear-gradient(135deg, var(--cjs-secondary), var(--cjs-secondary-end));
+  
+  /* Accent colors - defaults to green */
+  --cjs-accent: var(--cjs-brand-green-start);
+  --cjs-accent-rgb: var(--cjs-brand-green-start-rgb);
+  --cjs-accent-end: var(--cjs-brand-green-end);
+  --cjs-accent-end-rgb: var(--cjs-brand-green-end-rgb);
+  --cjs-accent-gradient: linear-gradient(135deg, var(--cjs-accent), var(--cjs-accent-end));
+  
+  /* Warning colors - defaults to orange */
+  --cjs-warning: var(--cjs-brand-orange-start);
+  --cjs-warning-rgb: var(--cjs-brand-orange-start-rgb);
+  --cjs-warning-end: var(--cjs-brand-orange-end);
+  --cjs-warning-end-rgb: var(--cjs-brand-orange-end-rgb);
+  --cjs-warning-gradient: linear-gradient(135deg, var(--cjs-warning), var(--cjs-warning-end));
+  
+  /* ===== COMPUTED VARIANTS ===== */
+  /* These are generated from the theme colors above */
+  
+  /* Primary variants */
+  --cjs-primary-50: color-mix(in srgb, var(--cjs-primary) 10%, white);
+  --cjs-primary-100: color-mix(in srgb, var(--cjs-primary) 20%, white);
+  --cjs-primary-200: color-mix(in srgb, var(--cjs-primary) 40%, white);
+  --cjs-primary-300: color-mix(in srgb, var(--cjs-primary) 60%, white);
+  --cjs-primary-400: color-mix(in srgb, var(--cjs-primary) 80%, white);
+  --cjs-primary-500: var(--cjs-primary);
+  --cjs-primary-600: color-mix(in srgb, var(--cjs-primary) 80%, black);
+  --cjs-primary-700: color-mix(in srgb, var(--cjs-primary) 60%, black);
+  --cjs-primary-800: color-mix(in srgb, var(--cjs-primary) 40%, black);
+  --cjs-primary-900: color-mix(in srgb, var(--cjs-primary) 20%, black);
+  
+  /* Neutral colors */
+  --cjs-white: #FAFAFA;
+  --cjs-white-rgb: 250, 250, 250;
+  --cjs-gray-50: #F9FAFB;
+  --cjs-gray-50-rgb: 249, 250, 251;
+  --cjs-gray-100: #F3F4F6;
+  --cjs-gray-100-rgb: 243, 244, 246;
+  --cjs-gray-200: #E5E7EB;
+  --cjs-gray-200-rgb: 229, 231, 235;
+  --cjs-gray-300: #D1D5DB;
+  --cjs-gray-300-rgb: 209, 213, 219;
+  --cjs-gray-400: #9CA3AF;
+  --cjs-gray-400-rgb: 156, 163, 175;
+  --cjs-gray-500: #6B7280;
+  --cjs-gray-500-rgb: 107, 114, 128;
+  --cjs-gray-600: #4B5563;
+  --cjs-gray-600-rgb: 75, 85, 99;
+  --cjs-gray-700: #374151;
+  --cjs-gray-700-rgb: 55, 65, 81;
+  --cjs-gray-800: #1F2937;
+  --cjs-gray-800-rgb: 31, 41, 55;
+  --cjs-gray-900: #111827;
+  --cjs-gray-900-rgb: 17, 24, 39;
+  --cjs-black: #0F172A;
+  --cjs-black-rgb: 15, 23, 42;
+  
+  /* Semantic colors */
+  --cjs-success: var(--cjs-brand-green-start);
+  --cjs-success-rgb: var(--cjs-brand-green-start-rgb);
+  --cjs-error: #EF4444;
+  --cjs-error-rgb: 239, 68, 68;
+  --cjs-info: var(--cjs-brand-cyan-start);
+  --cjs-info-rgb: var(--cjs-brand-cyan-start-rgb);
+  
+  /* Surface colors with opacity support */
+  --cjs-background: rgba(var(--cjs-white-rgb), var(--cjs-bg-opacity));
+  --cjs-surface: rgba(var(--cjs-gray-50-rgb), var(--cjs-bg-opacity));
+  --cjs-border: rgba(var(--cjs-gray-700-rgb), var(--cjs-border-opacity));
+  --cjs-highlight: rgba(var(--cjs-black-rgb), var(--cjs-highlight-opacity));
+  
+  /* Use the new contrasting foreground colors */
+  --cjs-text: rgba(var(--cjs-foreground-on-light-rgb), var(--cjs-text-opacity));
+  --cjs-text-secondary: rgba(var(--cjs-foreground-on-light-muted-rgb), var(--cjs-text-opacity));
+  --cjs-text-muted: rgba(var(--cjs-gray-500-rgb), var(--cjs-text-opacity));
+  
+  /* Semantic text colors with guaranteed contrast */
+  --cjs-text-on-primary: var(--cjs-foreground-on-dark);        /* Light text for primary buttons */
+  --cjs-text-on-secondary: var(--cjs-foreground-on-dark);      /* Light text for secondary buttons */
+  --cjs-text-on-light: var(--cjs-foreground-on-light);        /* Dark text for light backgrounds */
+  --cjs-text-on-dark: var(--cjs-foreground-on-dark);          /* Light text for dark backgrounds */
+}

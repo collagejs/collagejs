@@ -56,6 +56,10 @@
     "./logo/512": {
       "types": "./dist/logos/logo.d.ts",
       "default": "./dist/logos/collagejs-512.svg"
+    },
+    "./theme/*": {
+      "types": "./dist/theme/*.d.ts",
+      "default": "./dist/theme/*.css"
     }
   },
   "files": [

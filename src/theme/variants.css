@@ -1,0 +1,248 @@
+/**
+ * CollageJS Theme - Color Variants
+ *
+ * This file provides different theme variants by overriding the main color variables.
+ * Apply these classes to any themed container to change the theme appearance.
+ *
+ * MICRO-FRONTEND READY: Works with any scoped container.
+ */
+
+/* ===== ACCENT THEME (Orange Primary) ===== */
+[data-collagejs-theme] .cjs-theme-accent,
+.cjs-themed .cjs-theme-accent {
+  --cjs-primary: var(--cjs-brand-orange-start);
+  --cjs-primary-rgb: var(--cjs-brand-orange-start-rgb);
+  --cjs-primary-end: var(--cjs-brand-orange-end);
+  --cjs-primary-end-rgb: var(--cjs-brand-orange-end-rgb);
+  --cjs-primary-gradient: linear-gradient(135deg, var(--cjs-primary), var(--cjs-primary-end));
+
+  /* Regenerate primary variants for CSS variable reactivity */
+  --cjs-primary-50: color-mix(in srgb, var(--cjs-primary) 10%, white);
+  --cjs-primary-100: color-mix(in srgb, var(--cjs-primary) 20%, white);
+  --cjs-primary-200: color-mix(in srgb, var(--cjs-primary) 40%, white);
+  --cjs-primary-300: color-mix(in srgb, var(--cjs-primary) 60%, white);
+  --cjs-primary-400: color-mix(in srgb, var(--cjs-primary) 80%, white);
+  --cjs-primary-500: var(--cjs-primary);
+  --cjs-primary-600: color-mix(in srgb, var(--cjs-primary) 80%, black);
+  --cjs-primary-700: color-mix(in srgb, var(--cjs-primary) 60%, black);
+  --cjs-primary-800: color-mix(in srgb, var(--cjs-primary) 40%, black);
+  --cjs-primary-900: color-mix(in srgb, var(--cjs-primary) 20%, black);
+
+  --cjs-secondary: var(--cjs-brand-green-start);
+  --cjs-secondary-rgb: var(--cjs-brand-green-start-rgb);
+  --cjs-secondary-end: var(--cjs-brand-green-end);
+  --cjs-secondary-end-rgb: var(--cjs-brand-green-end-rgb);
+  --cjs-secondary-gradient: linear-gradient(135deg, var(--cjs-secondary), var(--cjs-secondary-end));
+
+  --cjs-warning: var(--cjs-brand-indigo-start);
+  --cjs-warning-rgb: var(--cjs-brand-indigo-start-rgb);
+  --cjs-warning-end: var(--cjs-brand-indigo-end);
+  --cjs-warning-end-rgb: var(--cjs-brand-indigo-end-rgb);
+  --cjs-warning-gradient: linear-gradient(135deg, var(--cjs-warning), var(--cjs-warning-end));
+
+  --cjs-accent: var(--cjs-brand-cyan-start);
+  --cjs-accent-rgb: var(--cjs-brand-cyan-start-rgb);
+  --cjs-accent-end: var(--cjs-brand-cyan-end);
+  --cjs-accent-end-rgb: var(--cjs-brand-cyan-end-rgb);
+  --cjs-accent-gradient: linear-gradient(135deg, var(--cjs-accent), var(--cjs-accent-end));
+}
+
+/* ===== SKY THEME (Cyan Primary) ===== */
+[data-collagejs-theme] .cjs-theme-sky,
+.cjs-themed .cjs-theme-sky {
+  --cjs-primary: var(--cjs-brand-cyan-start);
+  --cjs-primary-rgb: var(--cjs-brand-cyan-start-rgb);
+  --cjs-primary-end: var(--cjs-brand-cyan-end);
+  --cjs-primary-end-rgb: var(--cjs-brand-cyan-end-rgb);
+  --cjs-primary-gradient: linear-gradient(135deg, var(--cjs-primary), var(--cjs-primary-end));
+
+  /* Regenerate primary variants for CSS variable reactivity */
+  --cjs-primary-50: color-mix(in srgb, var(--cjs-primary) 10%, white);
+  --cjs-primary-100: color-mix(in srgb, var(--cjs-primary) 20%, white);
+  --cjs-primary-200: color-mix(in srgb, var(--cjs-primary) 40%, white);
+  --cjs-primary-300: color-mix(in srgb, var(--cjs-primary) 60%, white);
+  --cjs-primary-400: color-mix(in srgb, var(--cjs-primary) 80%, white);
+  --cjs-primary-500: var(--cjs-primary);
+  --cjs-primary-600: color-mix(in srgb, var(--cjs-primary) 80%, black);
+  --cjs-primary-700: color-mix(in srgb, var(--cjs-primary) 60%, black);
+  --cjs-primary-800: color-mix(in srgb, var(--cjs-primary) 40%, black);
+  --cjs-primary-900: color-mix(in srgb, var(--cjs-primary) 20%, black);
+
+  --cjs-secondary: var(--cjs-brand-green-start);
+  --cjs-secondary-rgb: var(--cjs-brand-green-start-rgb);
+  --cjs-secondary-end: var(--cjs-brand-green-end);
+  --cjs-secondary-end-rgb: var(--cjs-brand-green-end-rgb);
+  --cjs-secondary-gradient: linear-gradient(135deg, var(--cjs-secondary), var(--cjs-secondary-end));
+
+  --cjs-warning: var(--cjs-brand-orange-start);
+  --cjs-warning-rgb: var(--cjs-brand-orange-start-rgb);
+  --cjs-warning-end: var(--cjs-brand-orange-end);
+  --cjs-warning-end-rgb: var(--cjs-brand-orange-end-rgb);
+  --cjs-warning-gradient: linear-gradient(135deg, var(--cjs-warning), var(--cjs-warning-end));
+
+  --cjs-accent: var(--cjs-brand-cyan-start);
+  --cjs-accent-rgb: var(--cjs-brand-cyan-start-rgb);
+  --cjs-accent-end: var(--cjs-brand-cyan-end);
+  --cjs-accent-end-rgb: var(--cjs-brand-cyan-end-rgb);
+  --cjs-accent-gradient: linear-gradient(135deg, var(--cjs-accent), var(--cjs-accent-end));
+}
+
+/* ===== NATURE THEME (Green Primary) ===== */
+[data-collagejs-theme] .cjs-theme-nature,
+.cjs-themed .cjs-theme-nature {
+  --cjs-primary: var(--cjs-brand-green-start);
+  --cjs-primary-rgb: var(--cjs-brand-green-start-rgb);
+  --cjs-primary-end: var(--cjs-brand-green-end);
+  --cjs-primary-end-rgb: var(--cjs-brand-green-end-rgb);
+  --cjs-primary-gradient: linear-gradient(135deg, var(--cjs-primary), var(--cjs-primary-end));
+
+  /* Regenerate primary variants for CSS variable reactivity */
+  --cjs-primary-50: color-mix(in srgb, var(--cjs-primary) 10%, white);
+  --cjs-primary-100: color-mix(in srgb, var(--cjs-primary) 20%, white);
+  --cjs-primary-200: color-mix(in srgb, var(--cjs-primary) 40%, white);
+  --cjs-primary-300: color-mix(in srgb, var(--cjs-primary) 60%, white);
+  --cjs-primary-400: color-mix(in srgb, var(--cjs-primary) 80%, white);
+  --cjs-primary-500: var(--cjs-primary);
+  --cjs-primary-600: color-mix(in srgb, var(--cjs-primary) 80%, black);
+  --cjs-primary-700: color-mix(in srgb, var(--cjs-primary) 60%, black);
+  --cjs-primary-800: color-mix(in srgb, var(--cjs-primary) 40%, black);
+  --cjs-primary-900: color-mix(in srgb, var(--cjs-primary) 20%, black);
+
+  --cjs-secondary: var(--cjs-brand-cyan-start);
+  --cjs-secondary-rgb: var(--cjs-brand-cyan-start-rgb);
+  --cjs-secondary-end: var(--cjs-brand-cyan-end);
+  --cjs-secondary-end-rgb: var(--cjs-brand-cyan-end-rgb);
+  --cjs-secondary-gradient: linear-gradient(135deg, var(--cjs-secondary), var(--cjs-secondary-end));
+
+  --cjs-warning: var(--cjs-brand-indigo-start);
+  --cjs-warning-rgb: var(--cjs-brand-indigo-start-rgb);
+  --cjs-warning-end: var(--cjs-brand-indigo-end);
+  --cjs-warning-end-rgb: var(--cjs-brand-indigo-end-rgb);
+  --cjs-warning-gradient: linear-gradient(135deg, var(--cjs-warning), var(--cjs-warning-end));
+
+  --cjs-accent: var(--cjs-brand-orange-start);
+  --cjs-accent-rgb: var(--cjs-brand-orange-start-rgb);
+  --cjs-accent-end: var(--cjs-brand-orange-end);
+  --cjs-accent-end-rgb: var(--cjs-brand-orange-end-rgb);
+  --cjs-accent-gradient: linear-gradient(135deg, var(--cjs-accent), var(--cjs-accent-end));
+}
+
+/* ===== ROYAL THEME (Purple Primary) ===== */
+[data-collagejs-theme] .cjs-theme-royal,
+.cjs-themed .cjs-theme-royal {
+  --cjs-primary: var(--cjs-brand-indigo-start);
+  --cjs-primary-rgb: var(--cjs-brand-indigo-start-rgb);
+  --cjs-primary-end: var(--cjs-brand-indigo-end);
+  --cjs-primary-end-rgb: var(--cjs-brand-indigo-end-rgb);
+  --cjs-primary-gradient: linear-gradient(135deg, var(--cjs-primary), var(--cjs-primary-end));
+
+  /* Regenerate primary variants for CSS variable reactivity */
+  --cjs-primary-50: color-mix(in srgb, var(--cjs-primary) 10%, white);
+  --cjs-primary-100: color-mix(in srgb, var(--cjs-primary) 20%, white);
+  --cjs-primary-200: color-mix(in srgb, var(--cjs-primary) 40%, white);
+  --cjs-primary-300: color-mix(in srgb, var(--cjs-primary) 60%, white);
+  --cjs-primary-400: color-mix(in srgb, var(--cjs-primary) 80%, white);
+  --cjs-primary-500: var(--cjs-primary);
+  --cjs-primary-600: color-mix(in srgb, var(--cjs-primary) 80%, black);
+  --cjs-primary-700: color-mix(in srgb, var(--cjs-primary) 60%, black);
+  --cjs-primary-800: color-mix(in srgb, var(--cjs-primary) 40%, black);
+  --cjs-primary-900: color-mix(in srgb, var(--cjs-primary) 20%, black);
+
+  --cjs-secondary: var(--cjs-brand-cyan-start);
+  --cjs-secondary-rgb: var(--cjs-brand-cyan-start-rgb);
+  --cjs-secondary-end: var(--cjs-brand-cyan-end);
+  --cjs-secondary-end-rgb: var(--cjs-brand-cyan-end-rgb);
+  --cjs-secondary-gradient: linear-gradient(135deg, var(--cjs-secondary), var(--cjs-secondary-end));
+
+  --cjs-accent: var(--cjs-brand-green-start);
+  --cjs-accent-rgb: var(--cjs-brand-green-start-rgb);
+  --cjs-accent-end: var(--cjs-brand-green-end);
+  --cjs-accent-end-rgb: var(--cjs-brand-green-end-rgb);
+  --cjs-accent-gradient: linear-gradient(135deg, var(--cjs-accent), var(--cjs-accent-end));
+
+  --cjs-warning: var(--cjs-brand-orange-start);
+  --cjs-warning-rgb: var(--cjs-brand-orange-start-rgb);
+  --cjs-warning-end: var(--cjs-brand-orange-end);
+  --cjs-warning-end-rgb: var(--cjs-brand-orange-end-rgb);
+  --cjs-warning-gradient: linear-gradient(135deg, var(--cjs-warning), var(--cjs-warning-end));
+}
+
+/* ===== DARK THEME ===== */
+[data-collagejs-theme] .cjs-theme-dark,
+.cjs-themed .cjs-theme-dark {
+  --cjs-background: rgba(var(--cjs-black-rgb), var(--cjs-bg-opacity));
+  --cjs-surface: var(--cjs-gray-800);
+  --cjs-border: rgba(var(--cjs-gray-200-rgb), var(--cjs-border-opacity));
+  --cjs-highlight: rgba(var(--cjs-white-rgb), 0.14);
+  --cjs-text: rgba(var(--cjs-foreground-on-dark-rgb), var(--cjs-text-opacity));
+  --cjs-text-secondary: var(--cjs-gray-300);
+  --cjs-text-muted: var(--cjs-gray-400);
+
+  /* Adjust primary variants for dark theme */
+  --cjs-primary-50: color-mix(in srgb, var(--cjs-primary) 10%, black);
+  --cjs-primary-100: color-mix(in srgb, var(--cjs-primary) 20%, black);
+  --cjs-primary-200: color-mix(in srgb, var(--cjs-primary) 40%, black);
+  --cjs-primary-300: color-mix(in srgb, var(--cjs-primary) 60%, black);
+  --cjs-primary-400: color-mix(in srgb, var(--cjs-primary) 80%, black);
+  --cjs-primary-600: color-mix(in srgb, var(--cjs-primary) 80%, white);
+  --cjs-primary-700: color-mix(in srgb, var(--cjs-primary) 60%, white);
+  --cjs-primary-800: color-mix(in srgb, var(--cjs-primary) 40%, white);
+  --cjs-primary-900: color-mix(in srgb, var(--cjs-primary) 20%, white);
+  --cjs-primary-gradient: linear-gradient(135deg, var(--cjs-primary), var(--cjs-primary-end));
+}
+
+/* ===== GLASS EFFECT VARIANTS ===== */
+/* Applies backdrop blur and makes background translucent */
+/* Background color automatically matches current theme (light/dark) */
+
+[data-collagejs-theme] .cjs-glass,
+.cjs-themed .cjs-glass {
+  /* Regenerate background with glass opacity for CSS variable reactivity */
+  --cjs-background: rgba(var(--cjs-white-rgb), var(--cjs-glass-bg-opacity));
+  backdrop-filter: blur(var(--cjs-glass-blur)) saturate(var(--cjs-glass-saturation));
+  -webkit-backdrop-filter: blur(var(--cjs-glass-blur)) saturate(var(--cjs-glass-saturation));
+}
+
+/* Glass effect in dark theme - use dark background */
+/* Handle both: dark theme with glass child AND both classes on same element */
+[data-collagejs-theme] .cjs-theme-dark .cjs-glass,
+.cjs-themed .cjs-theme-dark .cjs-glass,
+[data-collagejs-theme].cjs-theme-dark .cjs-glass,
+.cjs-themed.cjs-theme-dark .cjs-glass,
+[data-collagejs-theme] .cjs-theme-dark.cjs-glass,
+.cjs-themed .cjs-theme-dark.cjs-glass,
+[data-collagejs-theme].cjs-theme-dark.cjs-glass,
+.cjs-themed.cjs-theme-dark.cjs-glass {
+  --cjs-background: rgba(var(--cjs-black-rgb), var(--cjs-glass-bg-opacity));
+}
+
+/* ===== ACCESSIBILITY PRESETS ===== */
+/* Pre-defined glass intensity levels for different needs */
+/* Apply these WITH .cjs-glass (e.g., class="cjs-glass cjs-glass-subtle") */
+
+/* Subtle glass - for users sensitive to visual effects */
+[data-collagejs-theme] .cjs-glass-subtle,
+.cjs-themed .cjs-glass-subtle {
+  --cjs-glass-blur: 4px;
+  --cjs-glass-saturation: 120%;
+  --cjs-glass-bg-opacity: 0.05;
+  --cjs-glass-border-opacity: 0.1;
+}
+
+/* Strong glass - for users who want maximum effect */
+[data-collagejs-theme] .cjs-glass-strong,
+.cjs-themed .cjs-glass-strong {
+  --cjs-glass-blur: 20px;
+  --cjs-glass-saturation: 220%;
+  --cjs-glass-bg-opacity: 0.15;
+  --cjs-glass-border-opacity: 0.3;
+}
+
+/* No blur glass - transparency without blur for accessibility */
+[data-collagejs-theme] .cjs-glass-no-blur,
+.cjs-themed .cjs-glass-no-blur {
+  --cjs-glass-blur: 0px;
+  --cjs-glass-saturation: 100%;
+  --cjs-glass-bg-opacity: 0.2;
+  --cjs-glass-border-opacity: 0.4;
+}
