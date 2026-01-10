@@ -5,7 +5,8 @@ describe('index', () => {
     it('Should only export the expected objects.', () => {
         const expectedObjects = [
             'mountPiece',
-            'mountPieceKey'
+            'mountPieceKey',
+            'ensureGlobalCollageJs'
         ];
 
         for (const key of Object.keys(CollageCore)) {
