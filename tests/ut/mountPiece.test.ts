@@ -1,6 +1,7 @@
+import { describe, it, beforeEach, afterEach } from 'mocha';
 import { expect } from 'chai';
 import * as sinon from 'sinon';
-import { mountPiece, mountPieceCore } from '../../src/mountPiece.js';
+import { mountPieceCore } from '../../src/mountPiece.js';
 import { mountKey } from '../../src/MountedPiece.js';
 import type { CorePiece } from '../../src/types.js';
 
@@ -48,7 +49,7 @@ describe('mountPiece', () => {
             const testPiece: CorePiece = {
                 mount: sinon.stub().resolves(sinon.stub())
             };
-            
+
             const piecePromise = Promise.resolve(testPiece);
 
             const mockInstance = {
@@ -69,7 +70,7 @@ describe('mountPiece', () => {
             const testPiece: CorePiece = {
                 mount: sinon.stub().resolves(sinon.stub())
             };
-            
+
             const parentMounted = {
                 unmount: sinon.stub(),
                 update: sinon.stub(),

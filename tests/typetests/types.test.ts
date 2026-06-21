@@ -5,19 +5,20 @@ import type {
     UpdateFn,
     Mount,
     Update,
+    AcceptableTarget,
 } from "../../src/types.js";
 
 describe("CorePiece", () => {
     test("Should have mount property.", () => {
         const piece: CorePiece = {
-            mount: async (target: HTMLElement) => async () => {}
+            mount: async (target: AcceptableTarget) => async () => {}
         };
         expect(piece).type.toBe<CorePiece>();
     });
 
     test("Should have optional update property.", () => {
         const pieceWithUpdate: CorePiece = {
-            mount: async (target: HTMLElement) => async () => {},
+            mount: async (target: AcceptableTarget) => async () => {},
             update: async (props: any) => {}
         };
         expect(pieceWithUpdate).type.toBe<CorePiece>();
@@ -31,8 +32,8 @@ describe("CorePiece", () => {
 });
 
 describe("MountFn", () => {
-    test("Should require HTMLElement as target parameter.", () => {
-        const validMount: MountFn = async (target: HTMLElement) => async () => {};
+    test("Should require AcceptableTarget as target parameter.", () => {
+        const validMount: MountFn = async (target: AcceptableTarget) => async () => {};
         expect(validMount).type.toBe<MountFn>();
     });
 
@@ -62,14 +63,14 @@ describe("UpdateFn", () => {
 
 describe("Mount type", () => {
     test("Should accept single mount function.", () => {
-        const singleMount: Mount = async (target: HTMLElement) => async () => {};
+        const singleMount: Mount = async (target: AcceptableTarget) => async () => {};
         expect(singleMount).type.toBeAssignableTo<Mount>();
     });
 
     test("Should accept array of mount functions.", () => {
         const arrayMount: Mount = [
-            async (target: HTMLElement) => async () => {},
-            async (target: HTMLElement) => async () => {}
+            async (target: AcceptableTarget) => async () => {},
+            async (target: AcceptableTarget) => async () => {}
         ];
         expect(arrayMount).type.toBeAssignableTo<Mount>();
     });

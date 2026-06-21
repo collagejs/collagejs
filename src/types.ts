@@ -1,4 +1,8 @@
 /**
+ * Defines the type for acceptable targets for mounting *CollageJS* pieces.
+ */
+export type AcceptableTarget = HTMLElement | ShadowRoot;
+/**
  * Properties passed to `mount()` functions of `CorePiece` objects.  It extends the piece's supported objects with a
  * property of type `symbol` that carries the piece parent's `mountPiece()` function.
  */
@@ -15,7 +19,7 @@ export type UnmountFn = () => Promise<void>;
  * @param props The piece's initial property values.
  * @returns A promise to the cleanup function that unmounts the piece.
  */
-export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: HTMLElement, props?: MountProps<TProps>) => Promise<UnmountFn>;
+export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: AcceptableTarget, props?: MountProps<TProps>) => Promise<UnmountFn>;
 /**
  * Type that defines the signature of the functions accepted in `CorePiece.update`.
  * @param props The new property values for the mounted piece.
@@ -79,7 +83,7 @@ export interface MountedPiece<TProps extends Record<string, any> = Record<string
 export type MountPiece<TProps extends Record<string, any> = Record<string, any>>
     = (
         piece: CorePiece<TProps> | Promise<CorePiece<TProps>>,
-        target: HTMLElement,
+        target: AcceptableTarget,
         props?: TProps
     ) => Promise<MountedPiece<TProps>>;
 
