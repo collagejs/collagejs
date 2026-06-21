@@ -15,7 +15,7 @@ export type MountProps<TProps extends Record<string, any> = Record<string, any>>
 export type UnmountFn = () => Promise<void>;
 /**
  * Type that defines the signature of the functions accepted in `CorePiece.mount`.
- * @param target The HTML target where the piece will be mounted as a child.
+ * @param target The HTML or shadow root target where the piece will be mounted as a child.
  * @param props The piece's initial property values.
  * @returns A promise to the cleanup function that unmounts the piece.
  */
@@ -77,7 +77,7 @@ export interface MountedPiece<TProps extends Record<string, any> = Record<string
  * generates a version of the global function that works identically, except that it tracks the `CollageJS` pieces
  * mounted with it so these are unmounted automatically as soon as the parent is unmounted.
  * @param piece `CorePiece` object to mount in the provided target, or a promise that resolves said object.
- * @param target HTML element where to mount
+ * @param target HTML element or shadow root where to mount.
  * @param props Optional properties for the `CorePiece` object.
  */
 export type MountPiece<TProps extends Record<string, any> = Record<string, any>>

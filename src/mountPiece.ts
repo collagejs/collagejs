@@ -32,7 +32,7 @@ export async function mountPieceCore<TProps extends Record<string, any> = Record
 /**
  * Mounts the CollageJS piece as a child of the target element.
  * @param piece The CollageJS piece to mount.
- * @param target The target element to mount the piece to.
+ * @param target The target HTML element or shadow root where to mount the piece.
  * @param props The properties to pass to the piece.
  */
 export function mountPiece<TProps extends Record<string, any> = Record<string, any>>(
