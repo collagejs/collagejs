@@ -1,5 +1,4 @@
-import { describe, it } from 'mocha';
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import { MountedPiece, mountKey } from '../../src/MountedPiece.js';
 import type { AcceptableTarget, CorePiece } from '../../src/types.js';
 import { mountPieceCore } from '../../src/mountPiece.js';
