@@ -1,5 +1,4 @@
-import { describe, it, beforeEach, afterEach } from 'mocha';
-import { expect } from 'chai';
+import { describe, it, beforeEach, afterEach, expect } from 'vitest';
 import * as sinon from 'sinon';
 import { mountPieceCore } from '../../src/mountPiece.js';
 import { mountKey } from '../../src/MountedPiece.js';

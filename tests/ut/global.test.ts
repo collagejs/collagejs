@@ -1,4 +1,4 @@
-import { describe, it } from "mocha";
+import { describe, it } from "vitest";
 import { ensureGlobalCollageJs } from "../../src/global.js";
 import { expect } from "chai";
 import "../../src/types.js";

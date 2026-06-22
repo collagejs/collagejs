@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, it, expect } from 'vitest';
 import * as CollageCore from '../../src/index.js';
 
 describe('index', () => {

@@ -1,4 +1,4 @@
-import { expect } from 'chai';
+import { describe, it, expect, beforeEach } from 'vitest';
 import { Stack } from '../../src/Stack.js';
 
 describe('Stack', () => {
@@ -11,7 +11,7 @@ describe('Stack', () => {
     describe('push()', () => {
         it('Should add an element to the top of the stack.', () => {
             const result = stack.push(1);
-            
+
             expect(result).to.equal(1);
             expect(stack.size).to.equal(1);
             expect(stack.peek()).to.equal(1);
@@ -21,7 +21,7 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             const result = stack.push(3);
-            
+
             expect(result).to.equal(3);
         });
 
@@ -29,7 +29,7 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             expect(stack.peek()).to.equal(3);
             expect(stack.size).to.equal(3);
         });
@@ -40,9 +40,9 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             const result = stack.pop();
-            
+
             expect(result).to.equal(3);
             expect(stack.size).to.equal(2);
             expect(stack.peek()).to.equal(2);
@@ -50,7 +50,7 @@ describe('Stack', () => {
 
         it('Should return undefined when popping from an empty stack.', () => {
             const result = stack.pop();
-            
+
             expect(result).to.be.undefined;
             expect(stack.size).to.equal(0);
         });
@@ -59,7 +59,7 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             expect(stack.pop()).to.equal(3);
             expect(stack.pop()).to.equal(2);
             expect(stack.pop()).to.equal(1);
@@ -74,13 +74,13 @@ describe('Stack', () => {
             stack.push(20);
             stack.push(30);
             stack.push(40);
-            
+
             // Verify they come out in reverse order
             const results: number[] = [];
             while (!stack.isEmpty()) {
                 results.push(stack.pop()!);
             }
-            
+
             expect(results).to.deep.equal([40, 30, 20, 10]);
         });
 
@@ -88,7 +88,7 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             expect(stack.pop()).to.equal(2);
-            
+
             stack.push(3);
             stack.push(4);
             expect(stack.pop()).to.equal(4);
@@ -101,16 +101,16 @@ describe('Stack', () => {
         it('Should return the top element without removing it.', () => {
             stack.push(1);
             stack.push(2);
-            
+
             const result = stack.peek();
-            
+
             expect(result).to.equal(2);
             expect(stack.size).to.equal(2);
         });
 
         it('Should return undefined for an empty stack.', () => {
             const result = stack.peek();
-            
+
             expect(result).to.be.undefined;
         });
     });
@@ -119,16 +119,16 @@ describe('Stack', () => {
         it('Should return the top element without removing it (alias for peek).', () => {
             stack.push(1);
             stack.push(2);
-            
+
             const result = stack.top();
-            
+
             expect(result).to.equal(2);
             expect(stack.size).to.equal(2);
         });
 
         it('Should return undefined for an empty stack.', () => {
             const result = stack.top();
-            
+
             expect(result).to.be.undefined;
         });
     });
@@ -140,7 +140,7 @@ describe('Stack', () => {
 
         it('Should return false for a non-empty stack.', () => {
             stack.push(1);
-            
+
             expect(stack.isEmpty()).to.be.false;
         });
     });
@@ -154,20 +154,20 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             expect(stack.size).to.equal(3);
         });
 
         it('Should update correctly after operations.', () => {
             stack.push(1);
             expect(stack.size).to.equal(1);
-            
+
             stack.push(2);
             expect(stack.size).to.equal(2);
-            
+
             stack.pop();
             expect(stack.size).to.equal(1);
-            
+
             stack.clear();
             expect(stack.size).to.equal(0);
         });
@@ -177,7 +177,7 @@ describe('Stack', () => {
         it('Should return the same value as size (alias).', () => {
             stack.push(1);
             stack.push(2);
-            
+
             expect(stack.length).to.equal(stack.size);
             expect(stack.length).to.equal(2);
         });
@@ -188,9 +188,9 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             stack.clear();
-            
+
             expect(stack.size).to.equal(0);
             expect(stack.isEmpty()).to.be.true;
             expect(stack.peek()).to.be.undefined;
@@ -198,7 +198,7 @@ describe('Stack', () => {
 
         it('Should work correctly on an already empty stack.', () => {
             stack.clear();
-            
+
             expect(stack.size).to.equal(0);
             expect(stack.isEmpty()).to.be.true;
         });
@@ -210,9 +210,9 @@ describe('Stack', () => {
             stack.push(2);
             stack.push(3);
             stack.push(2);
-            
+
             const result = stack.delete(item => item === 2);
-            
+
             expect(result).to.be.true;
             expect(stack.size).to.equal(3);
             expect(stack.toArray()).to.deep.equal([1, 2, 3]);
@@ -222,9 +222,9 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             const result = stack.delete(item => item === 4);
-            
+
             expect(result).to.be.false;
             expect(stack.size).to.equal(3);
         });
@@ -234,9 +234,9 @@ describe('Stack', () => {
             stack.push(2);
             stack.push(3);
             stack.push(2);
-            
+
             stack.delete(item => item === 2);
-            
+
             // Should remove the top occurrence of 2
             expect(stack.toArray()).to.deep.equal([1, 2, 3]);
         });
@@ -247,26 +247,26 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             const array = stack.toArray();
-            
+
             expect(array).to.deep.equal([1, 2, 3]);
         });
 
         it('Should return a shallow copy (not modify original).', () => {
             stack.push(1);
             stack.push(2);
-            
+
             const array = stack.toArray();
             array.push(3);
-            
+
             expect(stack.size).to.equal(2);
             expect(stack.toArray()).to.deep.equal([1, 2]);
         });
 
         it('Should return an empty array for an empty stack.', () => {
             const array = stack.toArray();
-            
+
             expect(array).to.deep.equal([]);
         });
     });
@@ -275,7 +275,7 @@ describe('Stack', () => {
         it('Should create a new stack from an array with first element as bottom.', () => {
             const array = [1, 2, 3, 4];
             const newStack = Stack.fromArray(array);
-            
+
             expect(newStack.size).to.equal(4);
             expect(newStack.peek()).to.equal(4);
             expect(newStack.toArray()).to.deep.equal([1, 2, 3, 4]);
@@ -283,14 +283,14 @@ describe('Stack', () => {
 
         it('Should create an empty stack from an empty array.', () => {
             const newStack = Stack.fromArray([]);
-            
+
             expect(newStack.size).to.equal(0);
             expect(newStack.isEmpty()).to.be.true;
         });
 
         it('Should work with different types.', () => {
             const stringStack = Stack.fromArray(['a', 'b', 'c']);
-            
+
             expect(stringStack.peek()).to.equal('c');
             expect(stringStack.toArray()).to.deep.equal(['a', 'b', 'c']);
         });
@@ -301,15 +301,15 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             const result = stack.toString();
-            
+
             expect(result).to.equal('Stack[1, 2, 3]');
         });
 
         it('Should return "Stack[]" for an empty stack.', () => {
             const result = stack.toString();
-            
+
             expect(result).to.equal('Stack[]');
         });
     });
@@ -320,12 +320,12 @@ describe('Stack', () => {
             stack.push(2);
             stack.push(3);
             stack.push(4);
-            
+
             const results: number[] = [];
             for (const item of stack) {
                 results.push(item);
             }
-            
+
             expect(results).to.deep.equal([4, 3, 2, 1]);
         });
 
@@ -333,12 +333,12 @@ describe('Stack', () => {
             stack.push(10);
             stack.push(20);
             stack.push(30);
-            
+
             const items: number[] = [];
             for (const item of stack) {
                 items.push(item);
             }
-            
+
             expect(items).to.deep.equal([30, 20, 10]);
         });
 
@@ -346,9 +346,9 @@ describe('Stack', () => {
             stack.push(5);
             stack.push(10);
             stack.push(15);
-            
+
             const array = Array.from(stack);
-            
+
             expect(array).to.deep.equal([15, 10, 5]);
         });
 
@@ -356,9 +356,9 @@ describe('Stack', () => {
             stack.push(100);
             stack.push(200);
             stack.push(300);
-            
+
             const array = [...stack];
-            
+
             expect(array).to.deep.equal([300, 200, 100]);
         });
 
@@ -367,7 +367,7 @@ describe('Stack', () => {
             for (const item of stack) {
                 results.push(item);
             }
-            
+
             expect(results).to.deep.equal([]);
         });
 
@@ -375,17 +375,17 @@ describe('Stack', () => {
             // Build stack with known order
             const pushOrder = ['first', 'second', 'third', 'fourth'];
             const stringStack = new Stack<string>();
-            
+
             for (const item of pushOrder) {
                 stringStack.push(item);
             }
-            
+
             // Iterate should yield in reverse order (top to bottom)
             const iterateOrder: string[] = [];
             for (const item of stringStack) {
                 iterateOrder.push(item);
             }
-            
+
             expect(iterateOrder).to.deep.equal(['fourth', 'third', 'second', 'first']);
         });
 
@@ -393,9 +393,9 @@ describe('Stack', () => {
             stack.push(1);
             stack.push(2);
             stack.push(3);
-            
+
             const iterator = stack[Symbol.iterator]();
-            
+
             expect(iterator.next().value).to.equal(3);
             stack.push(4);
             expect(iterator.next().value).to.equal(2);
@@ -410,7 +410,7 @@ describe('Stack', () => {
             stack.push(2);
             stack.push(3);
             stack.push(4);
-            
+
             const results: number[] = [];
             const iterator = stack.bottomToTop();
             let result = iterator.next();
@@ -418,7 +418,7 @@ describe('Stack', () => {
                 results.push(result.value);
                 result = iterator.next();
             }
-            
+
             expect(results).to.deep.equal([1, 2, 3, 4]);
         });
 
@@ -430,7 +430,7 @@ describe('Stack', () => {
                 results.push(result.value);
                 result = iterator.next();
             }
-            
+
             expect(results).to.deep.equal([]);
         });
     });
@@ -440,7 +440,7 @@ describe('Stack', () => {
             const stringStack = new Stack<string>();
             stringStack.push('hello');
             stringStack.push('world');
-            
+
             expect(stringStack.peek()).to.equal('world');
             expect(stringStack.pop()).to.equal('world');
             expect(stringStack.pop()).to.equal('hello');
@@ -451,14 +451,14 @@ describe('Stack', () => {
                 id: number;
                 name: string;
             }
-            
+
             const objectStack = new Stack<TestObject>();
             const obj1 = { id: 1, name: 'first' };
             const obj2 = { id: 2, name: 'second' };
-            
+
             objectStack.push(obj1);
             objectStack.push(obj2);
-            
+
             expect(objectStack.peek()).to.equal(obj2);
             expect(objectStack.pop()).to.equal(obj2);
             expect(objectStack.pop()).to.equal(obj1);
