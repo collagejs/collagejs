@@ -2,7 +2,7 @@
 
 > Micro library for framework-agnostic micro-frontends
 
-**🚧🚧 YOU'RE EARLY.  WORK IN PROGRESS... ETA: Early February, 2026 🚧🚧**
+**🚧🚧 I'M LATE.  WORK IN PROGRESS... ETA: JULY, 2026 🚧🚧**
 
 **If you're interested, star ⭐ the repository to get updates on the progress in your GH homepage.**
 
@@ -10,7 +10,11 @@
 
 [Full Documentation](https://collagejs.dev)
 
-*CollageJS* is a very, very small library that enables the composition of a web user interface with micro-frontends created with any technology (Svelte, React, Vue, SolidJS, HTMX, etc.).  It is heavily inspired by the *parcel* concept in the excellent `single-spa` routing library.
+> 📰 **SAD NEWS**
+>
+> `single-spa` creator *Joel/Jolyn Denning* [has passed away in late 2025](https://github.com/single-spa/single-spa/issues/1361#issuecomment-3991093643).
+
+*CollageJS* is a very, very small library that enables the composition of a web user interface with micro-frontends created with any technology (Svelte, React, Vue, SolidJS, HTMX, Lit, Ripple-TS, etc.).  It is heavily inspired by the *parcel* concept in the excellent `single-spa` routing library.
 
 ## How It Works
 
@@ -20,7 +24,7 @@
 type UnmountFn = () => Promise<void>;
 
 interface CorePiece<TProps> {
-    mount: (target: HTMLElement, props?: TProps) => Promise<UnmountFn>;
+    mount: (target: HTMLElement | ShadowRoot, props?: TProps) => Promise<UnmountFn>;
     update?: (props: TProps) => Promise<void>;
 };
 ```
@@ -42,7 +46,7 @@ This is a simple example that shows a tiny, yet complete micro-frontend made wit
 ```typescript
 export function buildTestPiece<TProps extends Record<string, any> = Record<string, any>>(
     callbacks?: {
-        mount: (target: HTMLElement, props?: MountProps<TProps>) => void | (() => void);
+        mount: (target: AcceptableTarget, props?: MountProps<TProps>) => void | (() => void);
         unmount: () => void;
         update: (props: TProps) => void;
     }
@@ -50,7 +54,7 @@ export function buildTestPiece<TProps extends Record<string, any> = Record<strin
     let pre: HTMLElement;
     return {
         // Here's mount():
-        async mount(target: HTMLElement, props?: MountProps<TProps>) {
+        async mount(target: AcceptableTarget, props?: MountProps<TProps>) {
             const delayMountCb = callbacks?.mount?.(target, props);
             pre = document.createElement('pre');
             pre.setAttribute('data-testid', pieceTestId);
@@ -138,7 +142,7 @@ Then the micro-frontends:  The concept doesn't exist.  At this point (after crea
 
 While `single-spa` asks you to shape your module exports in a particular way (the lifecycle functions), *CollageJS* imposes no such restriction.  It is just not necessary.  Just make sure you can get an object of type `CorePiece` to the `<Piece>` component of your preferred framework.  Then use your framework's marvels to make the `<Piece>` component appear or disappear.
 
-Yes, you'll still be working with import maps.  They are super handy.  We provide an enhanced (and simplified at the same time) version of `import-map-overrides` named `@collagejs/imo`.  It only supports the `overridable-importmap` type (and therefore only native import maps for native ES modules), but carries support for our `@collagejs/aim` plug-in that let's you statically import from micro-frontends.  **That's right!  We are free from dynamic `import()` calls!**  We can statically import from micro-frontends.  Furthermore, it has a more modern user interface:
+Yes, you'll still be working with import maps.  They are super handy.  We provide an enhanced (and simplified at the same time) version of `import-map-overrides` named `@collagejs/imo`.  It only supports the `overridable-importmap` type (and therefore only native import maps for native ES modules), but carries support for our `@collagejs/vite-aim` plug-in that let's you statically import from micro-frontends.  **That's right!  We are free from dynamic `import()` calls!**  We can statically import from micro-frontends.  Furthermore, it has a more modern user interface:
 
 ![Main screen of @collagejs/imo](./_docs/collagejs-imo.png)
 
@@ -158,12 +162,12 @@ Gone.  There's no equivalent in *CollageJS*, as experience with `single-spa` has
 | - | - | - | - |
 | `@collagejs/core` | ✔️ | (This repo) | Core functionality.  Provides the general mounting and unmounting logic. |
 | `@collagejs/vite-css` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including split CSS.  It also features FOUC prevention. |
-| `@collagejs/vite-im` | 🚧 | [Repo](https://github.com/collagejs/vite) | **Coming soon**.  Vite plug-in that injects an import map and optionally the `import-map-overrides` package to define bare module identifiers for easy micro-frontend loading and debugging. |
-| `@collagejs/vite-aim` | 🚧 | [Repo](https://github.com/collagejs/vite) | **Coming soon**.  Vite-plugin that gives the Vite development server the ability to accept import maps from the client, which are used to resolve modules in the Vite pipeline, enabling static imports from micro-frontend bare module identifiers. |
-| `@collagejs/imo` | 🚧 | [Repo](https://github.com/collagejs/imo) | **Coming soon**.  Our version of `import-map-overrides` that does the usual overriding of import map entries, plus it transmits the final import map to Vite development servers found in it. |
+| `@collagejs/vite-im` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite plug-in that injects an import map and optionally the `import-map-overrides` package to define bare module identifiers for easy micro-frontend loading and debugging. |
+| `@collagejs/vite-aim` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite-plugin that gives the Vite development server the ability to accept import maps from the client, which are used to resolve modules in the Vite pipeline, enabling static imports from micro-frontend bare module identifiers. |
+| `@collagejs/imo` | ✔️ | [Repo](https://github.com/collagejs/imo) | Our version of `import-map-overrides` that does the usual overriding of import map entries, plus it transmits the final import map to Vite development servers found in it. |
 | `@collagejs/svelte` | ✔️ | [Repo](https://github.com/collagejs/svelte) | Svelte component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
-| `@collagejs/react` | ❌ | [Repo](https://github.com/collagejs/react) | **Next priority**.  React component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
-| `@collagejs/solidjs` | ❌ | [Repo](https://github.com/collagejs/vite) | SolidJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
+| `@collagejs/react` | 🚧 | [Repo](https://github.com/collagejs/react) | **Coming soon**.  React component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
+| `@collagejs/solidjs` | ❌ | [Repo](https://github.com/collagejs/solidjs) | SolidJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/vue` | ❌ | [Repo](https://github.com/collagejs/vue) | VueJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/angular` | ❌ | | **External help needed.**  We don't have expertise in Angular, nor do we want to acquire it.  If you're an Angular developer, please consider contributing. |
 
