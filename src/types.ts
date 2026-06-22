@@ -1,4 +1,8 @@
 /**
+ * Defines the type for acceptable targets for mounting *CollageJS* pieces.
+ */
+export type AcceptableTarget = HTMLElement | ShadowRoot;
+/**
  * Properties passed to `mount()` functions of `CorePiece` objects.  It extends the piece's supported objects with a
  * property of type `symbol` that carries the piece parent's `mountPiece()` function.
  */
@@ -11,11 +15,11 @@ export type MountProps<TProps extends Record<string, any> = Record<string, any>>
 export type UnmountFn = () => Promise<void>;
 /**
  * Type that defines the signature of the functions accepted in `CorePiece.mount`.
- * @param target The HTML target where the piece will be mounted as a child.
+ * @param target The HTML or shadow root target where the piece will be mounted as a child.
  * @param props The piece's initial property values.
  * @returns A promise to the cleanup function that unmounts the piece.
  */
-export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: HTMLElement, props?: MountProps<TProps>) => Promise<UnmountFn>;
+export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: AcceptableTarget, props?: MountProps<TProps>) => Promise<UnmountFn>;
 /**
  * Type that defines the signature of the functions accepted in `CorePiece.update`.
  * @param props The new property values for the mounted piece.
@@ -73,13 +77,13 @@ export interface MountedPiece<TProps extends Record<string, any> = Record<string
  * generates a version of the global function that works identically, except that it tracks the `CollageJS` pieces
  * mounted with it so these are unmounted automatically as soon as the parent is unmounted.
  * @param piece `CorePiece` object to mount in the provided target, or a promise that resolves said object.
- * @param target HTML element where to mount
+ * @param target HTML element or shadow root where to mount.
  * @param props Optional properties for the `CorePiece` object.
  */
 export type MountPiece<TProps extends Record<string, any> = Record<string, any>>
     = (
         piece: CorePiece<TProps> | Promise<CorePiece<TProps>>,
-        target: HTMLElement,
+        target: AcceptableTarget,
         props?: TProps
     ) => Promise<MountedPiece<TProps>>;
 

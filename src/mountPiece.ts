@@ -1,15 +1,15 @@
 import { MountedPiece, mountKey } from "./MountedPiece.js";
-import type { CorePiece, MountPiece } from "./types.js";
+import type { AcceptableTarget, CorePiece, MountPiece } from "./types.js";
 
 /**
  * Constructor type for MountedPiece classes.
- * 
+ *
  * This exists merely to allow unit testing.
  */
 export interface MountedPieceConstructor {
     new <TProps extends Record<string, any> = Record<string, any>>(
-        piece: CorePiece<TProps>, 
-        mountPiece: MountPiece<any>, 
+        piece: CorePiece<TProps>,
+        mountPiece: MountPiece<any>,
         parent?: MountedPiece<any>
     ): MountedPiece<TProps>;
 }
@@ -17,7 +17,7 @@ export interface MountedPieceConstructor {
 export async function mountPieceCore<TProps extends Record<string, any> = Record<string, any>>(
     this: MountedPiece | undefined,
     piece: CorePiece<TProps> | Promise<CorePiece<TProps>>,
-    target: HTMLElement,
+    target: AcceptableTarget,
     props?: TProps,
     MountedPieceClass: MountedPieceConstructor = MountedPiece
 ): Promise<MountedPiece<TProps>> {
@@ -32,17 +32,17 @@ export async function mountPieceCore<TProps extends Record<string, any> = Record
 /**
  * Mounts the CollageJS piece as a child of the target element.
  * @param piece The CollageJS piece to mount.
- * @param target The target element to mount the piece to.
+ * @param target The target HTML element or shadow root where to mount the piece.
  * @param props The properties to pass to the piece.
  */
 export function mountPiece<TProps extends Record<string, any> = Record<string, any>>(
     piece: CorePiece<TProps>,
-    target: HTMLElement,
+    target: AcceptableTarget,
     props?: TProps,
 ) {
     return mountPieceCore.call<
-        MountedPiece | undefined, 
-        [CorePiece<TProps> | Promise<CorePiece<TProps>>, HTMLElement, TProps?], 
+        MountedPiece | undefined,
+        [CorePiece<TProps> | Promise<CorePiece<TProps>>, AcceptableTarget, TProps?],
         Promise<MountedPiece<TProps>>
     >(undefined, piece, target, props);
 }

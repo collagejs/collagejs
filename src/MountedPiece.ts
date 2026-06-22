@@ -1,6 +1,6 @@
 import { mountPieceKey } from "./common.js";
 import { Stack } from "./Stack.js";
-import type { Mount, CorePiece, UnmountFn, Update, MountPiece } from "./types.js";
+import type { Mount, CorePiece, UnmountFn, Update, MountPiece, AcceptableTarget } from "./types.js";
 
 export const mountKey = Symbol();
 
@@ -9,7 +9,7 @@ function generatePieceId(): string {
     return `cjsp-${++pieceIdCounter}-${Date.now().toString(36)}`;
 }
 
-async function doMount<TProps extends Record<string, any> = Record<string, any>>(mount: Mount<TProps>, target: HTMLElement, props?: TProps): Promise<UnmountFn> {
+async function doMount<TProps extends Record<string, any> = Record<string, any>>(mount: Mount<TProps>, target: AcceptableTarget, props?: TProps): Promise<UnmountFn> {
     if (Array.isArray(mount)) {
         const unmountFns = new Stack<UnmountFn>();
         for (const m of mount) {
@@ -55,7 +55,7 @@ export class MountedPiece<TProps extends Record<string, any> = Record<string, an
         this.#mountPiece = mountPiece.bind(this);
     }
 
-    async [mountKey](target: HTMLElement, props?: TProps) {
+    async [mountKey](target: AcceptableTarget, props?: TProps) {
         this.#cleanup = await doMount(this.#piece.mount, target, {...(props as TProps), [mountPieceKey]: this.#mountPiece});
         if (this.#parent) {
             this.#parent.#childPieces.push(this as MountedPiece);
