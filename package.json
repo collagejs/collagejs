@@ -9,7 +9,8 @@
     "test:unit": "vitest run",
     "test:watch": "vitest",
     "test:types": "tstyche ./tests/typetests",
-    "build": "tsc && pwsh -File ./post-build.ps1 && publint",
+    "clean": "rimraf dist",
+    "build": "npm run clean && tsc && pwsh -File ./post-build.ps1 && publint",
     "check": "tsc --noEmit"
   },
   "keywords": [
@@ -72,6 +73,7 @@
     "@types/sinon": "^21.0.0",
     "jsdom": "^29.1.1",
     "publint": "^0.3.11",
+    "rimraf": "^6.1.3",
     "sinon": "^22.0.0",
     "tstyche": "^7.2.1",
     "typescript": "^6.0.3",

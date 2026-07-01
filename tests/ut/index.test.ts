@@ -6,7 +6,8 @@ describe('index', () => {
         const expectedObjects = [
             'mountPiece',
             'mountPieceKey',
-            'ensureGlobalCollageJs'
+            'ensureGlobalCollageJs',
+            'preventRemount',
         ];
 
         for (const key of Object.keys(CollageCore)) {

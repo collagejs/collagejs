@@ -1,6 +1,6 @@
 import { mountPieceKey } from "./common.js";
 import { Stack } from "./Stack.js";
-import type { Mount, CorePiece, UnmountFn, Update, MountPiece, AcceptableTarget } from "./types.js";
+import type { Mount, CorePiece, UnmountFn, Update, MountPiece, AcceptableTarget, CorePieceCapabilities } from "./types.js";
 
 export const mountKey = Symbol();
 
@@ -35,30 +35,37 @@ async function doUpdate<TProps extends Record<string, any> = Record<string, any>
     return await update(props);
 }
 
-export class MountedPiece<TProps extends Record<string, any> = Record<string, any>> {
-    #piece: CorePiece<TProps>;
+export class MountedPiece<
+    TProps extends Record<string, any> = Record<string, any>,
+    TCap extends Record<string, any> = {}
+> {
+    #piece: CorePiece<TProps, TCap>;
     #id: string;
-    #childPieces: Stack<MountedPiece>;
-    #parent: MountedPiece | undefined;
+    #childPieces: Stack<MountedPiece<any, any>>;
+    #parent: MountedPiece<any, any> | undefined;
     #cleanup: UnmountFn | undefined;
-    #mountPiece: MountPiece<TProps>;
+    #mountPiece: MountPiece<any, any>;
 
     get mountPiece() {
-        return this.#mountPiece;
+        return this.#mountPiece as <UProps extends Record<string, any> = Record<string, any>, UCap extends CorePieceCapabilities = CorePieceCapabilities>(
+            piece: CorePiece<UProps, UCap> | Promise<CorePiece<UProps, UCap>>,
+            target: AcceptableTarget,
+            props?: UProps
+        ) => Promise<MountedPiece<UProps, UCap>>;
     }
 
-    constructor(piece: CorePiece<TProps>, mountPiece: MountPiece<TProps>, parent?: MountedPiece) {
+    constructor(piece: CorePiece<TProps, TCap>, mountPiece: MountPiece<TProps, TCap>, parent?: MountedPiece) {
         this.#piece = piece;
         this.#parent = parent;
         this.#id = generatePieceId();
-        this.#childPieces = new Stack<MountedPiece>();
+        this.#childPieces = new Stack<MountedPiece<any, any>>();
         this.#mountPiece = mountPiece.bind(this);
     }
 
     async [mountKey](target: AcceptableTarget, props?: TProps) {
         this.#cleanup = await doMount(this.#piece.mount, target, {...(props as TProps), [mountPieceKey]: this.#mountPiece});
         if (this.#parent) {
-            this.#parent.#childPieces.push(this as MountedPiece);
+            this.#parent.#childPieces.push(this);
         }
     }
 
@@ -72,9 +79,14 @@ export class MountedPiece<TProps extends Record<string, any> = Record<string, an
         if (this.#parent) {
             this.#parent.#childPieces.delete((item) => item.#id === this.#id);
         }
+        this.#cleanup = undefined;
     }
 
     update(props: TProps) {
         return doUpdate(this.#piece.update, props);
+    }
+
+    get capabilities() {
+        return this.#piece.capabilities as (CorePieceCapabilities & TCap) | undefined;
     }
 }
