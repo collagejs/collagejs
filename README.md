@@ -23,9 +23,10 @@
 ```typescript
 type UnmountFn = () => Promise<void>;
 
-interface CorePiece<TProps> {
+interface CorePiece<TProps, TCap> {
     mount: (target: HTMLElement | ShadowRoot, props?: TProps) => Promise<UnmountFn>;
     update?: (props: TProps) => Promise<void>;
+    readonly capabilities?: CorePieceCapabilities & TCap;
 };
 ```
 > ℹ️ These types were simplified.  See the real ones after installing the library.
@@ -34,6 +35,7 @@ In short:  Micro-frontend creators must simply provide a way to generate an obje
 
 - `mount` mounts the micro-frontend user interface in the document
 - `update` updates the properties given to the micro-frontend
+- `capabilities` is a feature introduced in v0.5.0 that allows core piece objects to declare its capabilities (see more in its own section)
 
 The `update` function is optional.  The `mount` function must return a cleanup function that, ideally, reverts the mounting process.
 
@@ -67,7 +69,7 @@ export function buildTestPiece<TProps extends Record<string, any> = Record<strin
             // Here's the unmounting function:
             return () => {
                 callbacks?.unmount?.();
-                target.removeChild(pre);
+                pre.remove();
                 return Promise.resolve();
             };
         },
@@ -142,7 +144,7 @@ Then the micro-frontends:  The concept doesn't exist.  At this point (after crea
 
 While `single-spa` asks you to shape your module exports in a particular way (the lifecycle functions), *CollageJS* imposes no such restriction.  It is just not necessary.  Just make sure you can get an object of type `CorePiece` to the `<Piece>` component of your preferred framework.  Then use your framework's marvels to make the `<Piece>` component appear or disappear.
 
-Yes, you'll still be working with import maps.  They are super handy.  We provide an enhanced (and simplified at the same time) version of `import-map-overrides` named `@collagejs/imo`.  It only supports the `overridable-importmap` type (and therefore only native import maps for native ES modules), but carries support for our `@collagejs/vite-aim` plug-in that let's you statically import from micro-frontends.  **That's right!  We are free from dynamic `import()` calls!**  We can statically import from micro-frontends.  Furthermore, it has a more modern user interface:
+Yes, you'll still be working with import maps.  They are super handy.  We provide an enhanced (and simplified at the same time) version of `import-map-overrides` named `@collagejs/imo`.  It only supports the `overridable-importmap` type (and therefore only native import maps for native ES modules), but carries support for our `@collagejs/vite-aim` plug-in that lets you statically import from micro-frontends.  **That's right!  We are free from dynamic `import()` calls!**  We can statically import from micro-frontends.  Furthermore, it has a more modern user interface:
 
 ![Main screen of @collagejs/imo](./_docs/collagejs-imo.png)
 
@@ -156,6 +158,18 @@ In *CollageJS*, `CorePiece.mount()` returns the clean-up (unmounting) function.
 
 Gone.  There's no equivalent in *CollageJS*, as experience with `single-spa` has demonstrated that is rarely needed, and if needed, one can do this initialization easily without having to impose the function requirement.  At least for now, there's no foreseeable future where an initialization function similar to `single-spa`'s `bootstrap()` will be defined.  But we agree:  *Never say NEVER*.
 
+## I'm Curious about `capabilities`
+
+Ok, in a nutshell, what inspired this feature was implementing the ability to mount micro-frontends (and its CSS) inside shadow root objects, plus give the developers a good DX.  In short:  If you, the dev, said you wanted the MFE in an open shadow root, but then changed your mind and now you want a closed shadow root, we have to unmount and remount or some other hacky things, like a full page reload.  But for this case, and at least in Svelte, we could relocate the component's generated DOM tree without remounting.
+
+This sounds great, but what if that breaks the MFE?  So the safe path is not to take advantage of cool features.  This conclusion made me sad as a developer.  Therefore, enter `capabilties`.
+
+The `capabilities` object simply states what the core piece object is able to withstand.  The core library defines 2 capabilities, and devs can add user-defined ones to the object.
+
+One of the stock (or "official" if you will) capabilities is `relocatable: boolean`.  If a core piece object returns `true` for `relocatable`, it is making this statement:  "I can take DOM relocation operations without going through the mounting lifecycle".
+
+With this reassurance at hand, framework adapters like `@collagejs/svelte` and others that can pull the trick cleanly can go ahead and do it, enhancing DX.  This made me happy once more as a developer, and hope that it makes more devs happy.
+
 ## Packages
 
 | Package | Status | Links | Description |
@@ -166,9 +180,9 @@ Gone.  There's no equivalent in *CollageJS*, as experience with `single-spa` has
 | `@collagejs/vite-aim` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite-plugin that auto-externalizes the module identifiers found in the application's import map.  It receives the import map live (and with overrides) from the client.  This enables static imports (no more dynamic `import()` calls). |
 | `@collagejs/imo` | ✔️ | [Repo](https://github.com/collagejs/imo) | Our version of `import-map-overrides` that does the usual overriding of import map entries, plus it transmits the final import map to Vite development servers found in it. |
 | `@collagejs/svelte` | ✔️ | [Repo](https://github.com/collagejs/svelte) | Svelte component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
-| `@collagejs/react` | 🚧 | [Repo](https://github.com/collagejs/react) | **Coming soon**.  React component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
+| `@collagejs/react` | ✔️ | [Repo](https://github.com/collagejs/react) | React component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/solidjs` | ❌ | [Repo](https://github.com/collagejs/solidjs) | SolidJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
-| `@collagejs/vue` | ❌ | [Repo](https://github.com/collagejs/vue) | VueJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
+| `@collagejs/vue` | 🚧 | [Repo](https://github.com/collagejs/vue) | **Next in line**  VueJS component library that can be used to create `CorePiece`-compliant objects and to mount `CorePiece` objects (of any technology) by providing the `<Piece>` component. |
 | `@collagejs/angular` | ❌ | | **External help needed.**  We don't have expertise in Angular, nor do we want to acquire it.  If you're an Angular developer, please consider contributing. |
 
 ## Other Repositories
