@@ -236,5 +236,25 @@ function testPrefix(shadow: boolean) {
             await mp2.unmount();
             expect(target2.children.length).to.equal(0);
         });
+        describe(`${testPrefix(shadow)}Capabilities`, () => {
+            it("Should forward the capabilities of the mounted piece correctly.", async () => {
+                const testPiece: CorePiece = {
+                    mount: async (target) => {
+                        const div = document.createElement('div');
+                        div.id = 'capabilities-content';
+                        target.appendChild(div);
+                        return async () => div.remove();
+                    },
+                    capabilities: {
+                        reMountable: true,
+                        relocatable: false
+                    }
+                };
+
+                const mp = new MountedPiece(testPiece, mountPieceCore);
+                expect(mp.capabilities?.reMountable).to.be.true;
+                expect(mp.capabilities?.relocatable).to.be.false;
+            });
+        });
     });
 });

@@ -35,9 +35,41 @@ export type Mount<TProps extends Record<string, any> = Record<string, any>> = Mo
  */
 export type Update<TProps extends Record<string, any> = Record<string, any>> = UpdateFn<TProps> | UpdateFn<TProps>[] | Update[];
 /**
+ * Defines the capabilities of a `CorePiece` object recognized by the core *CollageJS* library.  These capabilities are
+ * used to determine how the core library should handle the piece's lifecycle, or whether a particular action or
+ * feature can be enabled or allowed.
+ */
+export type CorePieceCapabilities = {
+    /**
+     * Informative only:  Indicates that the piece can be mounted more than once.
+     *
+     * Since `@collagejs/core` never injects code into `CorePiece` objects, it cannot enforce this capability.  The
+     * only place where this can be enforced is at `CorePiece.mount`.  The core library provides the `preventReMount()`
+     * function to help developers create mount functions that throw an error if called more than once.
+     *
+     * **💡TIP**:  Official framework adapters provide this functionality.
+     */
+    reMountable?: boolean;
+    /**
+     * Indicates that the piece allows relocation of its HTML markup to a new parent without unmounting.  For the best
+     * development experience, piece objects should always strive to be relocatable.
+     *
+     * If `false`, `Piece` components created with official framework adapters will most likely have to ask HMR to
+     * perform a full page reload whenever the developer changes shadow DOM options, like moving from an open to a
+     * closed shadow root.
+     *
+     * If `true` **and if the framework is capable** (i. e. Svelte), the piece can be relocated without unmounting, and
+     * HMR will be able to update the shadow root options without a full page reload.
+     */
+    relocatable?: boolean;
+}
+/**
  * Defines the contract that objects must follow in order to be mountable as *CollageJS* pieces (micro-frontends).
  */
-export interface CorePiece<TProps extends Record<string, any> = Record<string, any>> {
+export interface CorePiece<
+    TProps extends Record<string, any> = Record<string, any>,
+    TCap extends Record<string, any> = {}
+> {
     /**
      * Mounts the piece (micro-frontend) in the document.  Every mount function should always return a cleanup function
      * that, when called, unmounts the piece.
@@ -48,11 +80,24 @@ export interface CorePiece<TProps extends Record<string, any> = Record<string, a
      * while mounted in the document, and all property values must have been passed during mounting.
      */
     update?: Update<TProps>;
+    /**
+     * Declares the capabilities of the piece.  This is optional.  If not provided, the piece will be assumed to have no
+     * capabilities, and the core library will treat it as a simple piece that can be mounted once and unmounted once, and
+     * that cannot be relocated or re-mounted.
+     *
+     * **💡TIP**: Always try to at least create pieces that are relocatable by not storing the original target element in
+     * the piece's state.  Instead, just use the piece's root element's `parentElement` property to determine the
+     * current parent element.
+     */
+    capabilities?: CorePieceCapabilities & TCap;
 };
 /**
  * Defines the shape of the object returned by the process of mounting a `CorePiece` object.
  */
-export interface MountedPiece<TProps extends Record<string, any> = Record<string, any>> {
+export interface MountedPiece<
+    TProps extends Record<string, any> = Record<string, any>,
+    TCap extends Record<string, any> = {}
+> {
     /**
      * Function used to apply updated property values to the mounted `CorePiece` object.
      */
@@ -68,7 +113,15 @@ export interface MountedPiece<TProps extends Record<string, any> = Record<string
      * **IMPORTANT:**  Always use this function instead of the global `mountPiece` function when mounting other
      * `CorePiece` objects inside the mounted `CorePiece` object to prevent lifecycle issues.
      */
-    mountPiece: MountPiece<TProps>;
+    mountPiece<UProps extends Record<string, any> = Record<string, any>, UCap extends CorePieceCapabilities = CorePieceCapabilities>(
+        piece: CorePiece<UProps, UCap> | Promise<CorePiece<UProps, UCap>>,
+        target: AcceptableTarget,
+        props?: UProps
+    ): Promise<MountedPiece<UProps, UCap>>;
+    /**
+     * The declared capabilities of the mounted `CorePiece` object.
+     */
+    readonly capabilities: TCap | undefined;
 };
 /**
  * Type definition for the `mountPiece` functions that mount *CollageJS* pieces in the HTML document.
@@ -80,12 +133,14 @@ export interface MountedPiece<TProps extends Record<string, any> = Record<string
  * @param target HTML element or shadow root where to mount.
  * @param props Optional properties for the `CorePiece` object.
  */
-export type MountPiece<TProps extends Record<string, any> = Record<string, any>>
-    = (
-        piece: CorePiece<TProps> | Promise<CorePiece<TProps>>,
-        target: AcceptableTarget,
-        props?: TProps
-    ) => Promise<MountedPiece<TProps>>;
+export type MountPiece<
+    TProps extends Record<string, any> = Record<string, any>,
+    TCap extends Record<string, any> = {}
+> = (
+    piece: CorePiece<TProps> | Promise<CorePiece<TProps>>,
+    target: AcceptableTarget,
+    props?: TProps
+) => Promise<MountedPiece<TProps, TCap>>;
 
 declare global {
     /**

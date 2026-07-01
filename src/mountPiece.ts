@@ -1,5 +1,5 @@
 import { MountedPiece, mountKey } from "./MountedPiece.js";
-import type { AcceptableTarget, CorePiece, MountPiece } from "./types.js";
+import type { AcceptableTarget, CorePiece, CorePieceCapabilities, MountPiece } from "./types.js";
 
 /**
  * Constructor type for MountedPiece classes.
@@ -7,26 +7,29 @@ import type { AcceptableTarget, CorePiece, MountPiece } from "./types.js";
  * This exists merely to allow unit testing.
  */
 export interface MountedPieceConstructor {
-    new <TProps extends Record<string, any> = Record<string, any>>(
-        piece: CorePiece<TProps>,
+    new <TProps extends Record<string, any> = Record<string, any>, TCap extends Record<string, any> = {}>(
+        piece: CorePiece<TProps, TCap>,
         mountPiece: MountPiece<any>,
         parent?: MountedPiece<any>
     ): MountedPiece<TProps>;
 }
 
-export async function mountPieceCore<TProps extends Record<string, any> = Record<string, any>>(
+export async function mountPieceCore<
+    TProps extends Record<string, any> = Record<string, any>,
+    TCap extends Record<string, any> = {}
+>(
     this: MountedPiece | undefined,
-    piece: CorePiece<TProps> | Promise<CorePiece<TProps>>,
+    piece: CorePiece<TProps, TCap> | Promise<CorePiece<TProps, TCap>>,
     target: AcceptableTarget,
     props?: TProps,
     MountedPieceClass: MountedPieceConstructor = MountedPiece
-): Promise<MountedPiece<TProps>> {
+): Promise<MountedPiece<TProps, TCap>> {
     if (piece instanceof Promise) {
         piece = await piece;
     }
     const mp = new MountedPieceClass(piece, mountPieceCore<TProps>, this);
     await mp[mountKey](target, props);
-    return mp as MountedPiece<TProps>;
+    return mp as MountedPiece<TProps, TCap>;
 }
 
 /**
@@ -35,14 +38,14 @@ export async function mountPieceCore<TProps extends Record<string, any> = Record
  * @param target The target HTML element or shadow root where to mount the piece.
  * @param props The properties to pass to the piece.
  */
-export function mountPiece<TProps extends Record<string, any> = Record<string, any>>(
-    piece: CorePiece<TProps>,
+export function mountPiece<TProps extends Record<string, any> = Record<string, any>, TCap extends Record<string, any> = {}>(
+    piece: CorePiece<TProps, TCap>,
     target: AcceptableTarget,
     props?: TProps,
 ) {
     return mountPieceCore.call<
         MountedPiece | undefined,
-        [CorePiece<TProps> | Promise<CorePiece<TProps>>, AcceptableTarget, TProps?],
-        Promise<MountedPiece<TProps>>
+        [CorePiece<TProps, TCap> | Promise<CorePiece<TProps, TCap>>, AcceptableTarget, TProps?],
+        Promise<MountedPiece<TProps, TCap>>
     >(undefined, piece, target, props);
 }

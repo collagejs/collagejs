@@ -67,17 +67,17 @@ interface CorePiece<TProps> {
 @collagejs/collagejs/
 ├── src/
 |   ├── logos/             # Collection of CollageJS logos
+|   ├── theme/             # Series of CSS files that define themes based on the CollageJS brand
 │   ├── common.ts          # Things used in more than one other module
+│   ├── global.ts          # Things related to global objects
 │   ├── index.ts           # Main exports
-│   ├── types.ts           # Core type definitions
-│   ├── mountPiece.ts      # Main mounting API
 │   ├── MountedPiece.ts    # Core piece management class
+│   ├── mountPiece.ts      # Main mounting API
 │   ├── Stack.ts           # A stack implementation to ensure LIFO processing
-│   └── internal-types.ts  # Internal type definitions
+│   └── types.ts           # Core type definitions
 ├── tests/
 │   ├── ut/                # Unit tests (runtime behavior)
-│   ├── typetests/         # Type tests (TSTyche)
-│   └── setup.ts           # Test environment setup
+│   └── typetests/         # Type tests (TSTyche)
 ├── package.json           # NPM package configuration
 ├── post-build.ps1         # Post-build operations
 └── tsconfig.json          # TypeScript configuration
@@ -96,7 +96,7 @@ interface CorePiece<TProps> {
 ## Testing Guidelines
 
 ### Test Infrastructure
-- **Framework**: Mocha + Chai + ts-mocha + ts-node
+- **Framework**: Migrated to Vitest from Mocha + Chai + ts-mocha + ts-node (sinon still lingering in some places)
 - **DOM Testing**: JSDOM for browser-like environment
 - **Type Testing**: TSTyche for comprehensive TypeScript type testing
 - **Structure**: `tests/ut/` for unit tests, `tests/typetests/` for type tests
