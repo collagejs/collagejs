@@ -7,7 +7,7 @@ describe('index', () => {
             'mountPiece',
             'mountPieceKey',
             'ensureGlobalCollageJs',
-            'preventReMount',
+            'preventRemount',
         ];
 
         for (const key of Object.keys(CollageCore)) {

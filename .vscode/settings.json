@@ -4,6 +4,7 @@
         "FOUC",
         "frontends",
         "HTMX",
+        "remountable",
         "solidjs"
     ]
 }

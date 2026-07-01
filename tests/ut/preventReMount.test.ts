@@ -1,18 +1,17 @@
 import { describe, it, expect } from "vitest";
-import { preventReMount } from "../../src/preventReMount.js";
+import { preventRemount } from "../../src/preventReMount.js";
 
-describe("preventReMount", () => {
+const dummyEl = document.createElement("div");
+
+describe("preventRemount", () => {
     it("Should allow the mount function to be called once.", async () => {
-        const mountFn = preventReMount();
-        // @ts-expect-error TS2554:  Args are not used.
-        await expect(mountFn()).resolves;
+        const mountFn = preventRemount();
+        await expect(mountFn(dummyEl)).resolves.toBeTypeOf("function");
     });
 
     it("Should throw an error if the mount function is called more than once.", async () => {
-        const mountFn = preventReMount();
-        // @ts-expect-error TS2554:  Args are not used.
-        await mountFn();
-        // @ts-expect-error TS2554:  Args are not used.
-        expect(() => mountFn()).toThrow();
+        const mountFn = preventRemount();
+        await mountFn(dummyEl);
+        expect(() => mountFn(dummyEl)).toThrow();
     });
 });

@@ -1,5 +1,5 @@
 import { MountedPiece, mountKey } from "./MountedPiece.js";
-import type { AcceptableTarget, CorePiece, CorePieceCapabilities, MountPiece } from "./types.js";
+import type { AcceptableTarget, CorePiece, MountPiece } from "./types.js";
 
 /**
  * Constructor type for MountedPiece classes.
@@ -7,18 +7,18 @@ import type { AcceptableTarget, CorePiece, CorePieceCapabilities, MountPiece } f
  * This exists merely to allow unit testing.
  */
 export interface MountedPieceConstructor {
-    new <TProps extends Record<string, any> = Record<string, any>, TCap extends Record<string, any> = {}>(
-        piece: CorePiece<TProps, TCap>,
-        mountPiece: MountPiece<any>,
-        parent?: MountedPiece<any>
-    ): MountedPiece<TProps>;
+    new (
+        piece: CorePiece<any, any>,
+        mountPiece: MountPiece<any, any>,
+        parent?: MountedPiece<any, any>
+    ): MountedPiece<any, any>;
 }
 
 export async function mountPieceCore<
     TProps extends Record<string, any> = Record<string, any>,
     TCap extends Record<string, any> = {}
 >(
-    this: MountedPiece | undefined,
+    this: MountedPiece<any, any> | undefined,
     piece: CorePiece<TProps, TCap> | Promise<CorePiece<TProps, TCap>>,
     target: AcceptableTarget,
     props?: TProps,
@@ -27,7 +27,7 @@ export async function mountPieceCore<
     if (piece instanceof Promise) {
         piece = await piece;
     }
-    const mp = new MountedPieceClass(piece, mountPieceCore<TProps>, this);
+    const mp = new MountedPieceClass(piece, mountPieceCore, this);
     await mp[mountKey](target, props);
     return mp as MountedPiece<TProps, TCap>;
 }

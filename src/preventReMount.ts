@@ -1,4 +1,4 @@
-import { MountFn } from "./types.js";
+import type { Mount, MountFn } from "./types.js";
 
 /**
  * Creates a mount function that can only be called once. If the mount function is called more than once, it will throw
@@ -17,7 +17,7 @@ import { MountFn } from "./types.js";
  *     update: ...,
  *     capabilities: {
  *       // Informational only:  Allow the core piece object to answer the question.
- *       reMountable: false,
+ *       remountable: false,
  *     }
  *   };
  * }
@@ -30,11 +30,11 @@ import { MountFn } from "./types.js";
  * discarded unnecessarily.
  * @returns A mount function that throws an error if called more than once.
  */
-export function preventReMount<TProps extends Record<string, any> = Record<string, any>>(): MountFn<TProps> {
+export function preventRemount<TProps extends Record<string, any> = Record<string, any>>(): MountFn<TProps> {
     let mountCount = 0;
     return () => {
         if (mountCount > 0) {
-            throw new Error("This piece cannot be mounted after it has been unmounted.  Discard this object and create a new one to mount again.");
+            throw new Error("This piece cannot be mounted more than once.  If this is unexpected, you might be unknowingly sharing the same piece object in different places or Piece components.");
         }
         ++mountCount;
         return Promise.resolve(() => Promise.resolve());

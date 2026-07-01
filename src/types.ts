@@ -49,7 +49,7 @@ export type CorePieceCapabilities = {
      *
      * **💡TIP**:  Official framework adapters provide this functionality.
      */
-    reMountable?: boolean;
+    remountable?: boolean;
     /**
      * Indicates that the piece allows relocation of its HTML markup to a new parent without unmounting.  For the best
      * development experience, piece objects should always strive to be relocatable.
@@ -89,7 +89,7 @@ export interface CorePiece<
      * the piece's state.  Instead, just use the piece's root element's `parentElement` property to determine the
      * current parent element.
      */
-    capabilities?: CorePieceCapabilities & TCap;
+    readonly capabilities?: CorePieceCapabilities & TCap;
 };
 /**
  * Defines the shape of the object returned by the process of mounting a `CorePiece` object.
@@ -121,7 +121,7 @@ export interface MountedPiece<
     /**
      * The declared capabilities of the mounted `CorePiece` object.
      */
-    readonly capabilities: TCap | undefined;
+    readonly capabilities: (CorePieceCapabilities & TCap) | undefined;
 };
 /**
  * Type definition for the `mountPiece` functions that mount *CollageJS* pieces in the HTML document.
@@ -137,7 +137,7 @@ export type MountPiece<
     TProps extends Record<string, any> = Record<string, any>,
     TCap extends Record<string, any> = {}
 > = (
-    piece: CorePiece<TProps> | Promise<CorePiece<TProps>>,
+    piece: CorePiece<TProps, TCap> | Promise<CorePiece<TProps, TCap>>,
     target: AcceptableTarget,
     props?: TProps
 ) => Promise<MountedPiece<TProps, TCap>>;

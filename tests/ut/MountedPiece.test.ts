@@ -246,13 +246,13 @@ function testPrefix(shadow: boolean) {
                         return async () => div.remove();
                     },
                     capabilities: {
-                        reMountable: true,
+                        remountable: true,
                         relocatable: false
                     }
                 };
 
                 const mp = new MountedPiece(testPiece, mountPieceCore);
-                expect(mp.capabilities?.reMountable).to.be.true;
+                expect(mp.capabilities?.remountable).to.be.true;
                 expect(mp.capabilities?.relocatable).to.be.false;
             });
         });

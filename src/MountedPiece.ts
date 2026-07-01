@@ -39,12 +39,12 @@ export class MountedPiece<
     TProps extends Record<string, any> = Record<string, any>,
     TCap extends Record<string, any> = {}
 > {
-    #piece: CorePiece<TProps>;
+    #piece: CorePiece<TProps, TCap>;
     #id: string;
-    #childPieces: Stack<MountedPiece>;
+    #childPieces: Stack<MountedPiece<any, any>>;
     #parent: MountedPiece | undefined;
     #cleanup: UnmountFn | undefined;
-    #mountPiece: MountPiece<any>;
+    #mountPiece: MountPiece<any, any>;
 
     get mountPiece() {
         return this.#mountPiece as <UProps extends Record<string, any> = Record<string, any>, UCap extends CorePieceCapabilities = CorePieceCapabilities>(
