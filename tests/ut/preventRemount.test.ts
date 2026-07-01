@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { preventRemount } from "../../src/preventReMount.js";
+import { preventRemount } from "../../src/preventRemount.js";
 
 const dummyEl = document.createElement("div");
 

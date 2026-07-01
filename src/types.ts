@@ -44,7 +44,7 @@ export type CorePieceCapabilities = {
      * Informative only:  Indicates that the piece can be mounted more than once.
      *
      * Since `@collagejs/core` never injects code into `CorePiece` objects, it cannot enforce this capability.  The
-     * only place where this can be enforced is at `CorePiece.mount`.  The core library provides the `preventReMount()`
+     * only place where this can be enforced is at `CorePiece.mount`.  The core library provides the `preventRemount()`
      * function to help developers create mount functions that throw an error if called more than once.
      *
      * **💡TIP**:  Official framework adapters provide this functionality.
