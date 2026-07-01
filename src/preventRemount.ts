@@ -1,4 +1,4 @@
-import type { Mount, MountFn } from "./types.js";
+import type { MountFn } from "./types.js";
 
 /**
  * Creates a mount function that can only be called once. If the mount function is called more than once, it will throw

@@ -42,7 +42,7 @@ export class MountedPiece<
     #piece: CorePiece<TProps, TCap>;
     #id: string;
     #childPieces: Stack<MountedPiece<any, any>>;
-    #parent: MountedPiece | undefined;
+    #parent: MountedPiece<any, any> | undefined;
     #cleanup: UnmountFn | undefined;
     #mountPiece: MountPiece<any, any>;
 
@@ -58,14 +58,14 @@ export class MountedPiece<
         this.#piece = piece;
         this.#parent = parent;
         this.#id = generatePieceId();
-        this.#childPieces = new Stack<MountedPiece>();
+        this.#childPieces = new Stack<MountedPiece<any, any>>();
         this.#mountPiece = mountPiece.bind(this);
     }
 
     async [mountKey](target: AcceptableTarget, props?: TProps) {
         this.#cleanup = await doMount(this.#piece.mount, target, {...(props as TProps), [mountPieceKey]: this.#mountPiece});
         if (this.#parent) {
-            this.#parent.#childPieces.push(this as MountedPiece);
+            this.#parent.#childPieces.push(this);
         }
     }
 
