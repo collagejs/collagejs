@@ -21,6 +21,19 @@ export type UnmountFn = () => Promise<void>;
  */
 export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: AcceptableTarget, props?: MountProps<TProps>) => Promise<UnmountFn>;
 /**
+ * Defines the possible return values of `CorePiece.relocate`.
+ */
+export type RelocationResult = boolean | 'ready';
+/**
+ * Type that defines the signature of the functions accepted in `CorePiece.relocate`.
+ * @param parent The current parent of the piece's root element(s).
+ * @param newParent The new parent where the piece's root element(s) will be relocated.
+ * @returns A promise that resolves to `true` if the relocation was successful, `false` if it failed or or relocation
+ * is disallowed, or `'ready'` if the piece is ready to be relocated, but the relocation must be performed by the
+ * caller.
+ */
+export type RelocateFn = (parent: AcceptableTarget, newParent: AcceptableTarget) => Promise<RelocationResult>;
+/**
  * Type that defines the signature of the functions accepted in `CorePiece.update`.
  * @param props The new property values for the mounted piece.
  * @returns A promise that resolves once the process of updating property values concludes.
@@ -33,7 +46,11 @@ export type Mount<TProps extends Record<string, any> = Record<string, any>> = Mo
 /**
  * Defines the accepted shapes for `CorePiece.update`.
  */
-export type Update<TProps extends Record<string, any> = Record<string, any>> = UpdateFn<TProps> | UpdateFn<TProps>[] | Update[];
+export type Update<TProps extends Record<string, any> = Record<string, any>> = UpdateFn<TProps> | UpdateFn<TProps>[] | Update<TProps>[];
+/**
+ * Defines the accepted shapes for `CorePiece.relocate` and `CorePiece.prepareRelocate`.
+ */
+export type Relocate = RelocateFn | RelocateFn[] | Relocate[];
 /**
  * Defines the capabilities of a `CorePiece` object recognized by the core *CollageJS* library.  These capabilities are
  * used to determine how the core library should handle the piece's lifecycle, or whether a particular action or
@@ -50,18 +67,6 @@ export type CorePieceCapabilities = {
      * **💡TIP**:  Official framework adapters provide this functionality.
      */
     remountable?: boolean;
-    /**
-     * Indicates that the piece allows relocation of its HTML markup to a new parent without unmounting.  For the best
-     * development experience, piece objects should always strive to be relocatable.
-     *
-     * If `false`, `Piece` components created with official framework adapters will most likely have to ask HMR to
-     * perform a full page reload whenever the developer changes shadow DOM options, like moving from an open to a
-     * closed shadow root.
-     *
-     * If `true` **and if the framework is capable** (i. e. Svelte), the piece can be relocated without unmounting, and
-     * HMR will be able to update the shadow root options without a full page reload.
-     */
-    relocatable?: boolean;
 }
 /**
  * Defines the contract that objects must follow in order to be mountable as *CollageJS* pieces (micro-frontends).
@@ -81,13 +86,46 @@ export interface CorePiece<
      */
     update?: Update<TProps>;
     /**
-     * Declares the capabilities of the piece.  This is optional.  If not provided, the piece will be assumed to have no
-     * capabilities, and the core library will treat it as a simple piece that can be mounted once and unmounted once, and
-     * that cannot be relocated or re-mounted.
+     * Either relocates the root element(s) of the piece to a new parent, or prepares the piece for relocation.  This
+     * is optional.  If not provided, the piece won't support relocation of its root element(s) to a new parent, and
+     * the piece will be unmounted and remounted instead in the pertinent cases.
      *
-     * **💡TIP**: Always try to at least create pieces that are relocatable by not storing the original target element in
-     * the piece's state.  Instead, just use the piece's root element's `parentElement` property to determine the
-     * current parent element.
+     * ### Return Values
+     *
+     * + `true`:  The relocation was successful.
+     * + `false`:  The relocation failed or is disallowed.
+     * + `'ready'`:  The piece is ready to be relocated, but the relocation must be performed by the caller.
+     *
+     * ### When Using Multiple Relocation Functions
+     *
+     * If multiple relocation functions are provided, they will be called in order:
+     *
+     * + If the first of them returns `false`, the relocation process will stop.
+     * + If all of them return `true`, the relocation is considered successful.
+     * + If any of them returns `'ready'`, the remaining functions are still called, but the caller will
+     * run its relocation process after all functions have been called.
+     * + If any of them returns `false` after one or more of them returned `'ready'` or `true`, an error is thrown.
+     */
+    relocate?: Relocate;
+    /**
+     * Declares the capabilities of the piece.  This is optional.  If not provided, the piece will be assumed to have no
+     * capabilities.
+     *
+     * ### Notable Exception
+     *
+     * The library defines the `remountable` capability, which is informative only.  The core library cannot enforce
+     * this capability, so `CorePiece` developers should use the `preventRemount()` function (or equivalent) to throw an
+     * error if the piece is mounted more than once for pieces that cannot withstand multiple mountings.
+     *
+     * Official framework adapters query the value of `capabilities.remountable` and act accordingly to their best
+     * ability, and at least emit a warning if a non-remountable piece is mounted more than once.
+     *
+     * Only the author of a `CorePiece` object can guarantee that the piece is remountable.  We encourage developers to
+     * be explicit about this capability when creating `CorePiece` objects.
+     *
+     * > ℹ️ **NOTE:**  Official framework adapters are free to choose which default value for `capabilities.remountable`
+     * > they will use while creating `CorePiece` objects when the property is not provided in order to maximize
+     * > framework feature usage (perhaps a framework can guarantee component state automatically, or perhaps it cannot).
      */
     readonly capabilities?: CorePieceCapabilities & TCap;
 };
@@ -106,6 +144,10 @@ export interface MountedPiece<
      * Function used to unmount the `CorePiece` object.
      */
     unmount: UnmountFn;
+    /**
+     * Function used to relocate the `CorePiece` object to a new parent without unmounting.
+     */
+    relocate: RelocateFn;
     /**
      * The version of the global `mountPiece` function that tracks mounted children so their unmounting is
      * synchronized with this piece's unmount event.

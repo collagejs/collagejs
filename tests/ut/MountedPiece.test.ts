@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import { MountedPiece, mountKey } from '../../src/MountedPiece.js';
 import type { AcceptableTarget, CorePiece } from '../../src/types.js';
 import { mountPieceCore } from '../../src/mountPiece.js';
@@ -236,6 +236,111 @@ function testPrefix(shadow: boolean) {
             await mp2.unmount();
             expect(target2.children.length).to.equal(0);
         });
+        describe(`${testPrefix(shadow)}relocate()`, () => {
+            it(`${testPrefix(shadow)}Should handle relocation of a piece.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const piece = {
+                    mount: vi.fn(),
+                    relocate: vi.fn().mockReturnValue(Promise.resolve(true))
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(result).to.be.true;
+                expect(piece.relocate).toHaveBeenCalledWith(initialTarget, newTarget);
+            });
+            it(`${testPrefix(shadow)}Should return false when relocating a piece without a relocate function.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const piece = {
+                    mount: vi.fn()
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(result).to.be.false;
+            });
+            it(`${testPrefix(shadow)}Should handle array of relocation functions.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const relocateFn1 = vi.fn().mockResolvedValue(true);
+                const relocateFn2 = vi.fn().mockResolvedValue(true);
+                const piece = {
+                    mount: vi.fn(),
+                    relocate: [relocateFn1, relocateFn2]
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(relocateFn1).toHaveBeenCalledWith(initialTarget, newTarget);
+                expect(relocateFn2).toHaveBeenCalledWith(initialTarget, newTarget);
+                expect(result).to.be.true;
+            });
+            it(`${testPrefix(shadow)}Should return false if the first relocation function returns false.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const relocateFn1 = vi.fn().mockResolvedValue(false);
+                const relocateFn2 = vi.fn().mockResolvedValue(true);
+                const piece = {
+                    mount: vi.fn(),
+                    relocate: [relocateFn1, relocateFn2]
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(relocateFn1).toHaveBeenCalledWith(initialTarget, newTarget);
+                expect(relocateFn2).not.toHaveBeenCalled();
+                expect(result).to.be.false;
+            });
+            it(`${testPrefix(shadow)}Should not call subsequent relocation functions if one returns false.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const relocateFn1 = vi.fn().mockResolvedValue(false);
+                const relocateFn2 = vi.fn().mockResolvedValue(true);
+                const piece = {
+                    mount: vi.fn(),
+                    relocate: [relocateFn1, relocateFn2]
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(relocateFn1).toHaveBeenCalledWith(initialTarget, newTarget);
+                expect(relocateFn2).not.toHaveBeenCalled();
+                expect(result).to.be.false;
+            });
+            it(`${testPrefix(shadow)}Should return 'ready' even if not all relocation functions return it.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const relocateFn1 = vi.fn().mockResolvedValue('ready');
+                const relocateFn2 = vi.fn().mockResolvedValue(true);
+                const piece = {
+                    mount: vi.fn(),
+                    relocate: [relocateFn1, relocateFn2]
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(relocateFn1).toHaveBeenCalledWith(initialTarget, newTarget);
+                expect(relocateFn2).toHaveBeenCalledWith(initialTarget, newTarget);
+                expect(result).to.equal('ready');
+            });
+            [true, 'ready'].forEach(tc => {
+                it(`${testPrefix(shadow)}Should throw an error if a relocation function returns 'false' after another returned '${tc}'.`, async () => {
+                    const initialTarget = createTarget(shadow);
+                    const newTarget = createTarget(shadow);
+                    const relocateFn1 = vi.fn().mockResolvedValue(tc);
+                    const relocateFn2 = vi.fn().mockResolvedValue(false);
+                    const piece = {
+                        mount: vi.fn(),
+                        relocate: [relocateFn1, relocateFn2]
+                    };
+                    const mp = new MountedPiece(piece, mountPieceCore);
+                    await mp[mountKey](initialTarget);
+                    await expect(mp.relocate(initialTarget, newTarget)).rejects.toThrow();
+                });
+            });
+        });
         describe(`${testPrefix(shadow)}Capabilities`, () => {
             it("Should forward the capabilities of the mounted piece correctly.", async () => {
                 const testPiece: CorePiece = {
@@ -247,13 +352,11 @@ function testPrefix(shadow: boolean) {
                     },
                     capabilities: {
                         remountable: true,
-                        relocatable: false
                     }
                 };
 
                 const mp = new MountedPiece(testPiece, mountPieceCore);
                 expect(mp.capabilities?.remountable).to.be.true;
-                expect(mp.capabilities?.relocatable).to.be.false;
             });
         });
     });
