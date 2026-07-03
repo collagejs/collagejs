@@ -293,22 +293,6 @@ function testPrefix(shadow: boolean) {
                 expect(relocateFn2).not.toHaveBeenCalled();
                 expect(result).to.be.false;
             });
-            it(`${testPrefix(shadow)}Should not call subsequent relocation functions if one returns false.`, async () => {
-                const initialTarget = createTarget(shadow);
-                const newTarget = createTarget(shadow);
-                const relocateFn1 = vi.fn().mockResolvedValue(false);
-                const relocateFn2 = vi.fn().mockResolvedValue(true);
-                const piece = {
-                    mount: vi.fn(),
-                    relocate: [relocateFn1, relocateFn2]
-                };
-                const mp = new MountedPiece(piece, mountPieceCore);
-                await mp[mountKey](initialTarget);
-                const result = await mp.relocate(initialTarget, newTarget);
-                expect(relocateFn1).toHaveBeenCalledWith(initialTarget, newTarget);
-                expect(relocateFn2).not.toHaveBeenCalled();
-                expect(result).to.be.false;
-            });
             it(`${testPrefix(shadow)}Should return 'ready' even if not all relocation functions return it.`, async () => {
                 const initialTarget = createTarget(shadow);
                 const newTarget = createTarget(shadow);

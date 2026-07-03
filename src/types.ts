@@ -28,7 +28,7 @@ export type RelocationResult = boolean | 'ready';
  * Type that defines the signature of the functions accepted in `CorePiece.relocate`.
  * @param parent The current parent of the piece's root element(s).
  * @param newParent The new parent where the piece's root element(s) will be relocated.
- * @returns A promise that resolves to `true` if the relocation was successful, `false` if it failed or or relocation
+ * @returns A promise that resolves to `true` if the relocation was successful, `false` if it failed or relocation
  * is disallowed, or `'ready'` if the piece is ready to be relocated, but the relocation must be performed by the
  * caller.
  */
@@ -48,7 +48,7 @@ export type Mount<TProps extends Record<string, any> = Record<string, any>> = Mo
  */
 export type Update<TProps extends Record<string, any> = Record<string, any>> = UpdateFn<TProps> | UpdateFn<TProps>[] | Update<TProps>[];
 /**
- * Defines the accepted shapes for `CorePiece.relocate` and `CorePiece.prepareRelocate`.
+ * Defines the accepted shapes for `CorePiece.relocate`.
  */
 export type Relocate = RelocateFn | RelocateFn[] | Relocate[];
 /**
