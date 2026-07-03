@@ -1,6 +1,6 @@
 import { mountPieceKey } from "./common.js";
 import { Stack } from "./Stack.js";
-import type { Mount, CorePiece, UnmountFn, Update, MountPiece, AcceptableTarget, CorePieceCapabilities } from "./types.js";
+import type { Mount, CorePiece, UnmountFn, Update, MountPiece, AcceptableTarget, CorePieceCapabilities, Relocate, RelocationResult } from "./types.js";
 
 export const mountKey = Symbol();
 
@@ -33,6 +33,27 @@ async function doUpdate<TProps extends Record<string, any> = Record<string, any>
         return;
     }
     return await update(props);
+}
+
+async function doRelocate(relocate: Relocate, target: AcceptableTarget, newTarget: AcceptableTarget): Promise<RelocationResult> {
+    if (Array.isArray(relocate)) {
+        let first = true;
+        let ready = false;
+        for (const fn of relocate) {
+            const r = await doRelocate(fn, target, newTarget);
+            if (r === 'ready') {
+                ready = true;
+            } else if (!r) {
+                if (first) {
+                    return false;
+                }
+                throw new Error("Relocation function returned 'false' after another relocation function returned 'ready' or 'true'.  The piece's state is now inconsistent.");
+            }
+            first = false;
+        }
+        return ready ? 'ready' : true;
+    }
+    return await relocate(target, newTarget);
 }
 
 export class MountedPiece<
@@ -84,6 +105,13 @@ export class MountedPiece<
 
     update(props: TProps) {
         return doUpdate(this.#piece.update, props);
+    }
+
+    relocate(target: AcceptableTarget, newTarget: AcceptableTarget) {
+        if (!this.#piece.relocate) {
+            return Promise.resolve(false);
+        }
+        return doRelocate(this.#piece.relocate, target, newTarget);
     }
 
     get capabilities() {
