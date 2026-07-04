@@ -8,13 +8,9 @@ describe('index', () => {
             'mountPieceKey',
             'ensureGlobalCollageJs',
             'preventRemount',
+            'noopPiece',
         ];
-
-        for (const key of Object.keys(CollageCore)) {
-            expect(expectedObjects).to.include(key);
-        }
-        for (const expectedObject of expectedObjects) {
-            expect(CollageCore).to.have.property(expectedObject);
-        }
+        expect(Object.keys(CollageCore)).toEqual(expect.arrayContaining(expectedObjects));
+        expect(expectedObjects).toEqual(expect.arrayContaining(Object.keys(CollageCore)));
     });
 });
