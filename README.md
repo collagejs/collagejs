@@ -2,7 +2,7 @@
 
 > Micro library for framework-agnostic micro-frontends
 
-**🚧🚧 I'M LATE.  WORK IN PROGRESS... ETA: JULY, 2026 🚧🚧**
+**🚧 I'M CATCHING UP FAST.  WORK IN PROGRESS... ETA: JULY, 2026 🚧**
 
 **If you're interested, star ⭐ the repository to get updates on the progress in your GH homepage.**
 
@@ -26,6 +26,7 @@ type UnmountFn = () => Promise<void>;
 interface CorePiece<TProps, TCap> {
     mount: (target: HTMLElement | ShadowRoot, props?: TProps) => Promise<UnmountFn>;
     update?: (props: TProps) => Promise<void>;
+    relocate?: (source: AcceptableTarget, target: AcceptableTarget) => Promise<'supported' | 'done' | 'unsupported'>
     readonly capabilities?: CorePieceCapabilities & TCap;
 };
 ```
@@ -35,9 +36,10 @@ In short:  Micro-frontend creators must simply provide a way to generate an obje
 
 - `mount` mounts the micro-frontend user interface in the document
 - `update` updates the properties given to the micro-frontend
+- `relocate` migrates all root DOM elements in the current target to the new target without a mounting cycle
 - `capabilities` is a feature introduced in v0.5.0 that allows core piece objects to declare its capabilities (see more in its own section)
 
-The `update` function is optional.  The `mount` function must return a cleanup function that, ideally, reverts the mounting process.
+Only the `mount` function is required and must return a cleanup function that, ideally, reverts the mounting process.
 
 This object, once obtained by the consuming project/micro-frontend, is given to the `<Piece>` component.  The implementation of this component is framework-specific.  For example, the `<Piece>` component found in the `@collagejs/svelte` package is a **Svelte** component.
 
@@ -78,7 +80,8 @@ export function buildTestPiece<TProps extends Record<string, any> = Record<strin
             callbacks?.update?.(props);
             pre.textContent = JSON.stringify(props, null, 2);
             return Promise.resolve();
-        }
+        },
+        relocate: () => Promise.resolve('supported'),
     };
 }
 ```
@@ -90,10 +93,9 @@ The key learnings here are:
 2. Inside `mount()`, we do whatever we need to do to mount our user interface inside the target element.
 3. We return a cleanup function that unmounts the user interface.
 4. We optionally provide the `update()` method for property reactivity.
+5. We optionally provide the `relocate()` method for runtime flexibility.  Fun fact:  *CollageJS* can mount in shadow DOM, and reactively changing this setting triggers relocation.
 
 You can export from a single project as many of these factory functions as desired.  You are not constrained to expose just one *CollageJS* piece per project.  Export as many as needed/wanted.
-
-This is how packages like `@collagejs/svelte` work:  When mounting, it calls Svelte's `mount()` function with the given options (if any are given), and returns a cleanup function that calls `unmount()` on the component.  Updating properties is as simple as using a reactive object, at which point Svelte itself takes over the reacting part.
 
 ## Router Needs
 
@@ -108,7 +110,7 @@ There are 2 reasons:
 
 Yes, it is very handy to mount/dismount MFE's as the location URL changes.  This makes routing a popular choice, but not a mandatory one.  MFE's can come and go for any reason, like button clicks, timers or anything a developer can imagine.
 
-Maintenance is an issue.  The `single-spa` core team has had hard times trying to accommodate everyone's needs, especially when dealing with clashing behavior between their router and some framework's router, because people create MFE's with their own router built-in.  On top of this, `single-spa`'s layout web component, which is a "define your routes in markup" helper, lacks features that people want because they exist in other router engines.
+Maintenance is an issue.  The `single-spa` core team has had hard times trying to accommodate everyone's needs, especially when dealing with clashing behavior between their router and some framework's router, because people create MFE's with their own router built-in.  On top of this, `single-spa`'s layout web component, which is a "define your routes in markup" helper (web component), lacks features that people want because they exist in other router engines.
 
 So, the conclusion here is:  *CollageJS* takes care of micro-frontends.  Just that.
 
@@ -132,19 +134,19 @@ You can easily create a new *CollageJS* root project by telling GitHub to create
 - How routers and routes are laid out in markup
 - How fallback content works
 
-> 🪤**The Catch**:  It is a Svelte project.  Ideally, you should know [Svelte](https://svelte.dev) to take full advantage of it.  With `single-spa`, you would have to learn how it worked, and how its layout web component worked.  With this one, you should learn at least a little Svelte.  Some learning curve on both sides.  The good thing about this one is that Svelte knowledge is much more far-reaching.  Svelte is very easy and fun.  We promise.
+> 🪤**The Catch**:  It is a Svelte project.  Ideally, you should know [Svelte](https://svelte.dev) to take full advantage of it.  With `single-spa`, you would have to learn how it worked, and how its layout web component worked.  With this one, you should learn at least a little Svelte.  Some learning curve exists on both sides.  The good thing about this one is that Svelte knowledge is much more far-reaching.  Svelte is very easy and fun.  We promise.
 
 ## For the `single-spa` Savvy
 
-If you know/are used to `single-spa`, you're almost up to speed with *CollageJS*.  Basically, there's no concept of a "root config" project, but of course, there's always a "root" project.  Use whatever framework/technology you want to produce it.
+If you know/are used to `single-spa`, you're almost up to speed with *CollageJS*.  Basically, there's no concept of a "root config" project, but of course, there's always a "root" project.  Use whichever framework/technology you want to produce it.
 
-Then the micro-frontends:  The concept doesn't exist.  At this point (after creating a root UI project), you're 100% free to do as you wish.  Just mount *CollageJS pieces*, which are basically  the equivalent of `single-spa` parcels.  You don't get a router provided, you bring your own, or don't bring a router.  No worries.  Who says that a router is required?  Not us.  You can trigger "parcel" loading by any means at your disposal:  Button clicks, timers, window events, and yes, also location URL changes (routing) if you want.
+Then the micro-frontends:  The concept doesn't exist.  At this point (after creating a root UI project), you just mount *CollageJS pieces* which are basically the equivalent of `single-spa` parcels.  You don't get a router provided, you bring your own, or don't bring a router.  No worries.  Who says that a router is required?  Not us.  You can trigger "parcel" loading by any means at your disposal:  Button clicks, timers, window events, and yes, also location URL changes (routing) if you want.
 
 ### Technical Differences
 
 While `single-spa` asks you to shape your module exports in a particular way (the lifecycle functions), *CollageJS* imposes no such restriction.  It is just not necessary.  Just make sure you can get an object of type `CorePiece` to the `<Piece>` component of your preferred framework.  Then use your framework's marvels to make the `<Piece>` component appear or disappear.
 
-Yes, you'll still be working with import maps.  They are super handy.  We provide an enhanced (and simplified at the same time) version of `import-map-overrides` named `@collagejs/imo`.  It only supports the `overridable-importmap` type (and therefore only native import maps for native ES modules), but carries support for our `@collagejs/vite-aim` plug-in that lets you statically import from micro-frontends.  **That's right!  We are free from dynamic `import()` calls!**  We can statically import from micro-frontends.  Furthermore, it has a more modern user interface:
+Yes, you'll still be working with import maps.  They are super handy.  We provide an enhanced (and simplified at the same time) version of `import-map-overrides` named `@collagejs/imo`.  It only supports the `overridable-importmap` type (and therefore only native import maps for native ES modules), but carries support for our `@collagejs/vite-aim` plug-in that lets you statically import from micro-frontends and auto-externalizes anything in the import map.  **That's right!  We are free from dynamic `import()` calls!**  We can statically import from micro-frontends.  Furthermore, it has a more modern user interface:
 
 ![Main screen of @collagejs/imo](./_docs/collagejs-imo.png)
 
@@ -160,22 +162,18 @@ Gone.  There's no equivalent in *CollageJS*, as experience with `single-spa` has
 
 ## I'm Curious about `capabilities`
 
-Ok, in a nutshell, what inspired this feature was implementing the ability to mount micro-frontends (and its CSS) inside shadow root objects, plus give the developers a good DX.  In short:  If you, the dev, said you wanted the MFE in an open shadow root, but then changed your mind and now you want a closed shadow root, we have to unmount and remount or some other hacky things, like a full page reload.  But for this case, and at least in Svelte, we could relocate the component's generated DOM tree without remounting.
+The `capabilities` property is a place where core piece developers can declare what their pieces are capable of.  The *CollageJS* core library defines a small set of these, but developers are free to define their own.  These are useful for custom mounting implementations in large projects, where additional impositions can be placed on developed pieces.  Because core pieces are closed in nature, this is a simple way to inform consumers about the piece's capabilities.
 
-This sounds great, but what if that breaks the MFE?  So the safe path is not to take advantage of cool features.  This conclusion made me sad as a developer.  Therefore, enter `capabilties`.
+> 👴 If you're a C/C++ developer that knows COM/ActiveX, this is kind of the equivalent of `IUnknown::QueryInterface()`, where interfaces are layers of additional capabilities.
 
-The `capabilities` object simply states what the core piece object is able to withstand.  The core library defines 2 capabilities, and devs can add user-defined ones to the object.
-
-One of the stock (or "official" if you will) capabilities is `relocatable: boolean`.  If a core piece object returns `true` for `relocatable`, it is making this statement:  "I can take DOM relocation operations without going through the mounting lifecycle".
-
-With this reassurance at hand, framework adapters like `@collagejs/svelte` and others that can pull the trick cleanly can go ahead and do it, enhancing DX.  This made me happy once more as a developer, and hope that it makes more devs happy.
+Yes, you may also extend the core piece object and work with interfaces in TypeScript.  Your choice.
 
 ## Packages
 
 | Package | Status | Links | Description |
 | - | - | - | - |
 | `@collagejs/core` | ✔️ | (This repo) | Core functionality.  Provides the general mounting and unmounting logic. |
-| `@collagejs/vite-css` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including split CSS.  It also features FOUC prevention. |
+| `@collagejs/vite-css` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite plug-in that offers a CSS-mounting algorithm that is fully compatible with Vite's CSS bundling, including split CSS.  It also features FOUC prevention, shadow root mounting and relocation. |
 | `@collagejs/vite-im` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite plug-in that injects an import map and optionally the `@collagejs/imo` package to define bare module identifiers for easy micro-frontend loading and debugging. |
 | `@collagejs/vite-aim` | ✔️ | [Repo](https://github.com/collagejs/vite) | Vite-plugin that auto-externalizes the module identifiers found in the application's import map.  It receives the import map live (and with overrides) from the client.  This enables static imports (no more dynamic `import()` calls). |
 | `@collagejs/imo` | ✔️ | [Repo](https://github.com/collagejs/imo) | Our version of `import-map-overrides` that does the usual overriding of import map entries, plus it transmits the final import map to Vite development servers found in it. |
@@ -190,4 +188,4 @@ With this reassurance at hand, framework adapters like `@collagejs/svelte` and o
 | Repository | Description |
 | - | - |
 | [Root Template](https://github.com/collagejs/root-template) | Root template repository that can be used to create new repositories for *CollageJS* root projects, with client-side routing already configured. |
-| (-) | Repository of *CollageJS* pieces made in various front-end technologies for your reference and inspiration. |
+| [Gallery](https://github.com/collagejs/gallery) | Repository of *CollageJS* pieces made in various front-end technologies for your reference and inspiration. |
