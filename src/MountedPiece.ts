@@ -1,6 +1,6 @@
 import { mountPieceKey } from "./common.js";
 import { Stack } from "./Stack.js";
-import type { Mount, CorePiece, UnmountFn, Update, MountPiece, AcceptableTarget, CorePieceCapabilities, Relocate, RelocationResult } from "./types.js";
+import type { Mount, CorePiece, UnmountFn, Update, MountPiece, AcceptableTarget, CorePieceCapabilities, Relocate, RelocationResult, RelocationRollbackFn, RelocationResultValue } from "./types.js";
 
 export const mountKey = Symbol();
 
@@ -35,25 +35,65 @@ async function doUpdate<TProps extends Record<string, any> = Record<string, any>
     return await update(props);
 }
 
-async function doRelocate(relocate: Relocate, target: AcceptableTarget, newTarget: AcceptableTarget): Promise<RelocationResult> {
-    if (Array.isArray(relocate)) {
-        let first = true;
-        let ready = false;
-        for (const fn of relocate) {
-            const r = await doRelocate(fn, target, newTarget);
-            if (r === 'ready') {
-                ready = true;
-            } else if (!r) {
-                if (first) {
-                    return false;
-                }
-                throw new Error("Relocation function returned 'false' after another relocation function returned 'ready' or 'true'.  The piece's state is now inconsistent.");
-            }
-            first = false;
-        }
-        return ready ? 'ready' : true;
+function relocationResultValue(result: RelocationResult): RelocationResultValue {
+    if (Array.isArray(result)) {
+        return result[0];
     }
-    return await relocate(target, newTarget);
+    return result;
+}
+
+async function doRelocate(relocate: Relocate, target: AcceptableTarget, newTarget: AcceptableTarget): Promise<RelocationResultValue | Stack<RelocationRollbackFn>> {
+    const rollbackFns: Stack<RelocationRollbackFn> = new Stack<RelocationRollbackFn>();
+    let safeState = true;
+    const doRelocateInternal = async (rel: Relocate): Promise<RelocationResultValue> => {
+        const maybePushRollback = (result: RelocationResult) => {
+            if (Array.isArray(result) && (result[0] === 'done' || result[0] === 'supported')) {
+                rollbackFns.push(result[1]);
+            }
+            else if (result === 'done') {
+                safeState = false;
+            }
+        };
+        if (Array.isArray(rel)) {
+            let supported = false;
+            for (const fn of rel) {
+                const r = await doRelocateInternal(fn);
+                const rValue = relocationResultValue(r);
+                if (rValue === 'supported') {
+                    supported = true;
+                } else if (rValue === 'unsupported') {
+                    if (safeState) {
+                        while (rollbackFns.size) {
+                            await rollbackFns.pop()?.();
+                        }
+                        return 'unsupported';
+                    }
+                    throw new Error("Relocation function returned 'unsupported' after another relocation function returned 'done' without a rollback.  The piece's state is now inconsistent.");
+                }
+            }
+            return supported ? 'supported' : 'done';
+        }
+        try {
+            const r = await rel(target, newTarget);
+            maybePushRollback(r);
+            return relocationResultValue(r);
+        }
+        catch (error) {
+            if (safeState) {
+                while (rollbackFns.size) {
+                    await rollbackFns.pop()?.();
+                }
+                console.warn("Relocation function failed.  Piece relocation has been rolled back.", error);
+                return 'unsupported';
+            }
+            throw new Error("Relocation function failed after another relocation function returned 'done' without a rollback.  The piece's state is now inconsistent.");
+        }
+    };
+    const internalResult = await doRelocateInternal(relocate);
+    if (rollbackFns.size > 0 && relocationResultValue(internalResult) === 'supported') {
+        return rollbackFns;
+    }
+    return internalResult;
 }
 
 export class MountedPiece<
@@ -84,7 +124,7 @@ export class MountedPiece<
     }
 
     async [mountKey](target: AcceptableTarget, props?: TProps) {
-        this.#cleanup = await doMount(this.#piece.mount, target, {...(props as TProps), [mountPieceKey]: this.#mountPiece});
+        this.#cleanup = await doMount(this.#piece.mount, target, { ...(props as TProps), [mountPieceKey]: this.#mountPiece });
         if (this.#parent) {
             this.#parent.#childPieces.push(this);
         }
@@ -107,11 +147,30 @@ export class MountedPiece<
         return doUpdate(this.#piece.update, props);
     }
 
-    relocate(target: AcceptableTarget, newTarget: AcceptableTarget) {
+    async relocate(target: AcceptableTarget, newTarget: AcceptableTarget, customRelocate?: (source: AcceptableTarget, target: AcceptableTarget) => Promise<boolean>) {
         if (!this.#piece.relocate) {
             return Promise.resolve(false);
         }
-        return doRelocate(this.#piece.relocate, target, newTarget);
+        const result = await doRelocate(this.#piece.relocate, target, newTarget);
+        if (result === 'done') {
+            return true;
+        }
+        if (result === 'unsupported') {
+            return false;
+        }
+        if (result === 'supported') {
+            return await customRelocate?.(target, newTarget) ?? false;
+        }
+        try {
+            return await customRelocate?.(target, newTarget) ?? false;
+        }
+        catch (error) {
+            while (result.size) {
+                await result.pop()?.();
+            }
+            console.warn("Custom relocation function failed.  Piece relocation has been rolled back.", error);
+            return false;
+        }
     }
 
     get capabilities() {
