@@ -263,7 +263,7 @@ function testPrefix(shadow: boolean) {
                 expect(result).to.be.false;
             });
 
-            it(`${testPrefix(shadow)}Should return false when caller relocation is required but not provided.`, async () => {
+            it(`${testPrefix(shadow)}Should throw when caller relocation is required but not provided.`, async () => {
                 const initialTarget = createTarget(shadow);
                 const newTarget = createTarget(shadow);
                 const piece = {
@@ -274,7 +274,7 @@ function testPrefix(shadow: boolean) {
                 const mp = new MountedPiece(piece, mountPieceCore);
                 await mp[mountKey](initialTarget);
 
-                await expect(mp.relocate(initialTarget, newTarget)).resolves.toBe(false);
+                await expect(mp.relocate(initialTarget, newTarget)).rejects.toThrow(/no custom relocation function was provided/i);
             });
 
             it(`${testPrefix(shadow)}Should return the caller relocation result when the piece supports relocation.`, async () => {
@@ -474,6 +474,27 @@ function testPrefix(shadow: boolean) {
                 expect(callOrder).to.deep.equal(['rollback-2', 'rollback-1']);
                 expect(warnSpy).toHaveBeenCalledOnce();
                 warnSpy.mockRestore();
+            });
+
+            it(`${testPrefix(shadow)}Should not expose rollback stack when state became unsafe before supported result.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const rollback = vi.fn().mockResolvedValue(undefined);
+                const customRelocate = vi.fn().mockRejectedValue(new Error('custom-boom'));
+                const piece = {
+                    mount: vi.fn(),
+                    relocate: [
+                        vi.fn().mockResolvedValue(['supported', rollback]),
+                        vi.fn().mockResolvedValue('done')
+                    ]
+                };
+
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+
+                await expect(mp.relocate(initialTarget, newTarget, customRelocate)).rejects.toThrow('custom-boom');
+                expect(customRelocate).toHaveBeenCalledOnce();
+                expect(rollback).not.toHaveBeenCalled();
             });
         });
         describe(`${testPrefix(shadow)}Capabilities`, () => {

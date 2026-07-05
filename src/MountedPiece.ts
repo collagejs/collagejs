@@ -90,7 +90,7 @@ async function doRelocate(relocate: Relocate, target: AcceptableTarget, newTarge
         }
     };
     const internalResult = await doRelocateInternal(relocate);
-    if (rollbackFns.size > 0 && relocationResultValue(internalResult) === 'supported') {
+    if (rollbackFns.size > 0 && relocationResultValue(internalResult) === 'supported' && safeState) {
         return rollbackFns;
     }
     return internalResult;
@@ -158,11 +158,15 @@ export class MountedPiece<
         if (result === 'unsupported') {
             return false;
         }
+        // At this point, custom relocation must finish the job.
+        if (!customRelocate) {
+            throw new Error("Relocation of this piece is 'supported', but no custom relocation function was provided.");
+        }
         if (result === 'supported') {
-            return await customRelocate?.(target, newTarget) ?? false;
+            return await customRelocate(target, newTarget);
         }
         try {
-            return await customRelocate?.(target, newTarget) ?? false;
+            return await customRelocate(target, newTarget);
         }
         catch (error) {
             while (result.size) {
