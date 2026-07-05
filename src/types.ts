@@ -21,16 +21,26 @@ export type UnmountFn = () => Promise<void>;
  */
 export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: AcceptableTarget, props?: MountProps<TProps>) => Promise<UnmountFn>;
 /**
+ * Supported return values of `CorePiece.relocate` functions.
+ */
+export type RelocationResultValue = 'supported' | 'unsupported' | 'done';
+/**
+ * Defines the signature of rollback functions that can be returned by `CorePiece.relocate` functions.  These functions
+ * can be provided when returning `done` or `supported` from a relocation function, and will be called if the
+ * relocation chain fails.
+ * @returns A promise that resolves once the rollback process concludes.
+ */
+export type RelocationRollbackFn = () => Promise<void>;
+/**
  * Defines the possible return values of `CorePiece.relocate`.
  */
-export type RelocationResult = boolean | 'ready';
+export type RelocationResult = RelocationResultValue | [Exclude<RelocationResultValue, 'unsupported'>, RelocationRollbackFn];
 /**
  * Type that defines the signature of the functions accepted in `CorePiece.relocate`.
  * @param parent The current parent of the piece's root element(s).
  * @param newParent The new parent where the piece's root element(s) will be relocated.
- * @returns A promise that resolves to `true` if the relocation was successful, `false` if it failed or relocation
- * is disallowed, or `'ready'` if the piece is ready to be relocated, but the relocation must be performed by the
- * caller.
+ * @returns A promise that resolves to one of the acceptable values.  See `RelocationResult` and related types for
+ * details.
  */
 export type RelocateFn = (parent: AcceptableTarget, newParent: AcceptableTarget) => Promise<RelocationResult>;
 /**
@@ -88,23 +98,34 @@ export interface CorePiece<
     /**
      * Either relocates the root element(s) of the piece to a new parent, or prepares the piece for relocation.  This
      * is optional.  If not provided, the piece won't support relocation of its root element(s) to a new parent, and
-     * the piece will be unmounted and remounted instead in the pertinent cases.
+     * the piece will be unmounted and remounted instead in pertinent cases.
      *
      * ### Return Values
      *
-     * + `true`:  The relocation was successful.
-     * + `false`:  The relocation failed or is disallowed.
-     * + `'ready'`:  The piece is ready to be relocated, but the relocation must be performed by the caller.
+     * + `done`:  The relocation succeeded and was made entirely by the piece.
+     * + `unsupported`:  The piece does not support relocation.
+     * + `supported`:  The piece supports relocation, but the relocation must be performed by the caller.
+     *
+     * Additionally, the values `done` and `supported` can be returned as a tuple with a rollback function that will be
+     * called if the relocation chain fails after this function has returned `done` or `supported`.
+     *
+     * ### Rollback Functions
+     *
+     * If a relocation function returns a rollback function, it will be called if any of the following occurs:
+     *
+     * + Another relocation function returns `unsupported` after this one returned `done` or `supported`.
+     * + Another relocation function throws an error after this one returned `done` or `supported`.
      *
      * ### When Using Multiple Relocation Functions
      *
      * If multiple relocation functions are provided, they will be called in order:
      *
-     * + If the first of them returns `false`, the relocation process will stop.
-     * + If all of them return `true`, the relocation is considered successful.
-     * + If any of them returns `'ready'`, the remaining functions are still called, but the caller will
-     * run its relocation process after all functions have been called.
-     * + If any of them returns `false` after one or more of them returned `'ready'` or `true`, an error is thrown.
+     * + If the first of them returns `unsupported`, the relocation process will stop.
+     * + If all of them return `done`, the relocation is considered successful.
+     * + If any of them returns `'supported'`, the remaining functions are still called, but the caller will
+     * run its relocation process after all functions have been called, even if they return `'done'`.
+     * + If any of them returns `unsupported` after one or more of them returned `'supported'` or `done` without a
+     * rollback function, the piece's state is considered inconsistent and an error will be thrown.
      */
     relocate?: Relocate;
     /**
@@ -147,7 +168,7 @@ export interface MountedPiece<
     /**
      * Function used to relocate the `CorePiece` object to a new parent without unmounting.
      */
-    relocate: RelocateFn;
+    relocate: (source: AcceptableTarget, target: AcceptableTarget, customRelocate?: (source: AcceptableTarget, target: AcceptableTarget) => Promise<boolean>) => Promise<boolean>;
     /**
      * The version of the global `mountPiece` function that tracks mounted children so their unmounting is
      * synchronized with this piece's unmount event.

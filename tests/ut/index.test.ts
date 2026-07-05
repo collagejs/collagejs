@@ -9,6 +9,7 @@ describe('index', () => {
             'ensureGlobalCollageJs',
             'preventRemount',
             'noopPiece',
+            'Stack',
         ];
         expect(Object.keys(CollageCore)).toEqual(expect.arrayContaining(expectedObjects));
         expect(expectedObjects).toEqual(expect.arrayContaining(Object.keys(CollageCore)));
