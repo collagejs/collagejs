@@ -168,8 +168,8 @@
 }
 
 /* ===== DARK THEME ===== */
-[data-collagejs-theme] .cjs-theme-dark,
-.cjs-themed .cjs-theme-dark {
+[data-collagejs-theme] .cjs-theme-dark, [data-collagejs-theme].cjs-theme-dark,
+.cjs-themed .cjs-theme-dark, .cjs-themed.cjs-theme-dark {
   --cjs-background: rgba(var(--cjs-black-rgb), var(--cjs-bg-opacity));
   --cjs-surface: var(--cjs-gray-800);
   --cjs-border: rgba(var(--cjs-gray-200-rgb), var(--cjs-border-opacity));
@@ -189,6 +189,8 @@
   --cjs-primary-800: color-mix(in srgb, var(--cjs-primary) 40%, white);
   --cjs-primary-900: color-mix(in srgb, var(--cjs-primary) 20%, white);
   --cjs-primary-gradient: linear-gradient(135deg, var(--cjs-primary), var(--cjs-primary-end));
+  background: var(--cjs-background);
+  color: var(--cjs-text);
 }
 
 /* ===== GLASS EFFECT VARIANTS ===== */
