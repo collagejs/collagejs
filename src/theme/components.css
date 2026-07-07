@@ -14,6 +14,23 @@
   padding: 0.2rem 0.4rem;
 }
 
+/* ===== LINKS ===== */
+[data-collagejs-theme] a,
+.cjs-themed a {
+  color: var(--cjs-primary);
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+
+  &:hover,
+  &:focus {
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: var(--cjs-primary-600);
+  }
+}
+
 /* ===== BUTTONS ===== */
 
 /* Base button styles */
@@ -249,6 +266,14 @@
 .cjs-bg-orange input, .cjs-bg-orange select, .cjs-bg-orange textarea {
   background: rgba(var(--cjs-black-rgb), 0.15);
   color: var(--cjs-text-on-primary);
+}
+
+/* Checkboxes */
+[data-collagejs-theme] input[type="checkbox"],
+.cjs-themed input[type="checkbox"] {
+  accent-color: var(--cjs-primary);
+  width: 1.25em;
+  height: 1.25em;
 }
 
 /* Range inputs */
@@ -503,4 +528,3 @@ ul.cjs-tabs {
   background: var(--cjs-error-100);
   color: var(--cjs-error-800);
 }
-
