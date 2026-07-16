@@ -9,7 +9,9 @@
 
 /* ===== ACCENT THEME (Orange Primary) ===== */
 [data-collagejs-theme] .cjs-theme-accent,
-.cjs-themed .cjs-theme-accent {
+.cjs-themed .cjs-theme-accent,
+[data-collagejs-theme].cjs-theme-accent,
+.cjs-themed.cjs-theme-accent {
   --cjs-primary: var(--cjs-brand-orange-start);
   --cjs-primary-rgb: var(--cjs-brand-orange-start-rgb);
   --cjs-primary-end: var(--cjs-brand-orange-end);
@@ -49,7 +51,9 @@
 
 /* ===== SKY THEME (Cyan Primary) ===== */
 [data-collagejs-theme] .cjs-theme-sky,
-.cjs-themed .cjs-theme-sky {
+.cjs-themed .cjs-theme-sky,
+[data-collagejs-theme].cjs-theme-sky,
+.cjs-themed.cjs-theme-sky {
   --cjs-primary: var(--cjs-brand-cyan-start);
   --cjs-primary-rgb: var(--cjs-brand-cyan-start-rgb);
   --cjs-primary-end: var(--cjs-brand-cyan-end);
@@ -89,7 +93,9 @@
 
 /* ===== NATURE THEME (Green Primary) ===== */
 [data-collagejs-theme] .cjs-theme-nature,
-.cjs-themed .cjs-theme-nature {
+.cjs-themed .cjs-theme-nature,
+[data-collagejs-theme].cjs-theme-nature,
+.cjs-themed.cjs-theme-nature {
   --cjs-primary: var(--cjs-brand-green-start);
   --cjs-primary-rgb: var(--cjs-brand-green-start-rgb);
   --cjs-primary-end: var(--cjs-brand-green-end);
@@ -129,7 +135,9 @@
 
 /* ===== ROYAL THEME (Purple Primary) ===== */
 [data-collagejs-theme] .cjs-theme-royal,
-.cjs-themed .cjs-theme-royal {
+.cjs-themed .cjs-theme-royal,
+[data-collagejs-theme].cjs-theme-royal,
+.cjs-themed.cjs-theme-royal {
   --cjs-primary: var(--cjs-brand-indigo-start);
   --cjs-primary-rgb: var(--cjs-brand-indigo-start-rgb);
   --cjs-primary-end: var(--cjs-brand-indigo-end);
