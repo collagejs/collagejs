@@ -15,8 +15,8 @@
 }
 
 /* ===== LINKS ===== */
-[data-collagejs-theme] a,
-.cjs-themed a {
+[data-collagejs-theme] a:not(.cjs-btn),
+.cjs-themed a:not(.cjs-btn) {
   color: var(--cjs-primary);
   text-decoration: none;
   transition: all 0.2s ease-in-out;
