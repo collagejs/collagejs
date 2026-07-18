@@ -84,10 +84,10 @@
   --cjs-warning-end-rgb: var(--cjs-brand-orange-end-rgb);
   --cjs-warning-gradient: linear-gradient(135deg, var(--cjs-warning), var(--cjs-warning-end));
 
-  --cjs-accent: var(--cjs-brand-cyan-start);
-  --cjs-accent-rgb: var(--cjs-brand-cyan-start-rgb);
-  --cjs-accent-end: var(--cjs-brand-cyan-end);
-  --cjs-accent-end-rgb: var(--cjs-brand-cyan-end-rgb);
+  --cjs-accent: var(--cjs-brand-indigo-start);
+  --cjs-accent-rgb: var(--cjs-brand-indigo-start-rgb);
+  --cjs-accent-end: var(--cjs-brand-indigo-end);
+  --cjs-accent-end-rgb: var(--cjs-brand-indigo-end-rgb);
   --cjs-accent-gradient: linear-gradient(135deg, var(--cjs-accent), var(--cjs-accent-end));
 }
 
