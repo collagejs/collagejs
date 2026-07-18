@@ -6,8 +6,8 @@
 
 /* ===== CODE ELEMENTS ===== */
 
-[data-collagejs-theme] code,
-.cjs-themed code {
+[data-collagejs-theme] code:not(pre > code),
+.cjs-themed code:not(pre > code) {
   background: var(--cjs-highlight);
   border: 1px solid var(--cjs-border);
   border-radius: var(--cjs-radius);
@@ -35,8 +35,6 @@
 
 /* Base button styles */
 .cjs-btn {
-  --cjs-btn-color: var(--cjs-text);
-  --cjs-btn-background: transparent;
   background: var(--cjs-btn-background);
   color: var(--cjs-btn-color);
   display: inline-flex;
@@ -114,27 +112,20 @@
 
 /* Outline button */
 .cjs-btn-outline {
-  color: var(--cjs-btn-color);
   background: transparent;
-  border-color: var(--cjs-btn-color);
+  border-color: var(--cjs-btn-semantic-color);
 
-  &:hover {
-    background: var(--cjs-primary);
-    color: var(--cjs-text-on-primary);
-  }
-
+  &:hover,
   &:active,
   &.active {
-    background: var(--cjs-primary-600);
-    color: var(--cjs-text-on-primary);
+    background: var(--cjs-btn-background);
   }
 }
 
 /* Neutral button - blends with any background, no color contribution */
 /* Perfect for table actions, toolbars, and context-sensitive controls */
 .cjs-btn-neutral {
-  background: transparent;
-  color: var(--cjs-text);
+  --cjs-btn-background: transparent;
   border-color: transparent;
 
   &:hover {
@@ -150,8 +141,8 @@
 /* Ghost button - transparent with semantic color on interaction */
 /* Combine with semantic modifiers: .cjs-btn-ghost.cjs-btn-primary */
 .cjs-btn-ghost {
-  background: transparent;
-  color: var(--cjs-btn-semantic-color);
+  --cjs-btn-color: var(--cjs-btn-semantic-color);
+  --cjs-btn-background: transparent;
   border-color: transparent;
 
   &:hover {
