@@ -4,11 +4,6 @@ import type { Mount, CorePiece, UnmountFn, Update, MountPiece, AcceptableTarget,
 
 export const mountKey = Symbol();
 
-let pieceIdCounter = 0;
-function generatePieceId(): string {
-    return `cjsp-${++pieceIdCounter}-${Date.now().toString(36)}`;
-}
-
 async function doMount<TProps extends Record<string, any> = Record<string, any>>(mount: Mount<TProps>, target: AcceptableTarget, props?: TProps): Promise<UnmountFn> {
     if (Array.isArray(mount)) {
         const unmountFns = new Stack<UnmountFn>();
@@ -101,7 +96,6 @@ export class MountedPiece<
     TCap extends Record<string, any> = {}
 > {
     #piece: CorePiece<TProps, TCap>;
-    #id: string;
     #childPieces: Stack<MountedPiece<any, any>>;
     #parent: MountedPiece<any, any> | undefined;
     #cleanup: UnmountFn | undefined;
@@ -118,7 +112,6 @@ export class MountedPiece<
     constructor(piece: CorePiece<TProps, TCap>, mountPiece: MountPiece<TProps, TCap>, parent?: MountedPiece) {
         this.#piece = piece;
         this.#parent = parent;
-        this.#id = generatePieceId();
         this.#childPieces = new Stack<MountedPiece<any, any>>();
         this.#mountPiece = mountPiece.bind(this);
     }
@@ -138,7 +131,7 @@ export class MountedPiece<
         }
         await this.#cleanup?.();
         if (this.#parent) {
-            this.#parent.#childPieces.delete((item) => item.#id === this.#id);
+            this.#parent.#childPieces.delete((item) => item === this);
         }
         this.#cleanup = undefined;
     }
