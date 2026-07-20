@@ -102,7 +102,7 @@ export class MountedPiece<
     #mountPiece: MountPiece<any, any>;
 
     get mountPiece() {
-        return this.#mountPiece as <UProps extends Record<string, any> = Record<string, any>, UCap extends CorePieceCapabilities = CorePieceCapabilities>(
+        return this.#mountPiece as <UProps extends Record<string, any> = Record<string, any>, UCap extends Record<string, any> = {}>(
             piece: CorePiece<UProps, UCap> | Promise<CorePiece<UProps, UCap>>,
             target: AcceptableTarget,
             props?: UProps
