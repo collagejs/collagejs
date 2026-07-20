@@ -8,6 +8,7 @@
 
 [data-collagejs-theme] code:not(pre > code),
 .cjs-themed code:not(pre > code) {
+  font-family: var(--cjs-font-mono);
   background: var(--cjs-highlight);
   border: 1px solid var(--cjs-border);
   border-radius: var(--cjs-radius);
