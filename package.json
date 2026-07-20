@@ -1,6 +1,6 @@
 {
   "name": "@collagejs/core",
-  "version": "0.10.2",
+  "version": "0.10.1",
   "description": "Core functionality for CollageJS.",
   "type": "module",
   "main": "./dist/index.js",
