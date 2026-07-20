@@ -176,7 +176,7 @@ export interface MountedPiece<
      * **IMPORTANT:**  Always use this function instead of the global `mountPiece` function when mounting other
      * `CorePiece` objects inside the mounted `CorePiece` object to prevent lifecycle issues.
      */
-    mountPiece<UProps extends Record<string, any> = Record<string, any>, UCap extends CorePieceCapabilities = CorePieceCapabilities>(
+    mountPiece<UProps extends Record<string, any> = Record<string, any>, UCap extends Record<string, any> = {}>(
         piece: CorePiece<UProps, UCap> | Promise<CorePiece<UProps, UCap>>,
         target: AcceptableTarget,
         props?: UProps
