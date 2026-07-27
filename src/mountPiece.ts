@@ -16,20 +16,20 @@ export interface MountedPieceConstructor {
 
 export async function mountPieceCore<
     TProps extends Record<string, any> = Record<string, any>,
-    TCap extends Record<string, any> = {}
+    TMeta extends Record<string, any> = {}
 >(
     this: MountedPiece<any, any> | undefined,
-    piece: CorePiece<TProps, TCap> | Promise<CorePiece<TProps, TCap>>,
+    piece: CorePiece<TProps, TMeta> | Promise<CorePiece<TProps, TMeta>>,
     target: AcceptableTarget,
     props?: TProps,
     MountedPieceClass: MountedPieceConstructor = MountedPiece
-): Promise<MountedPiece<TProps, TCap>> {
+): Promise<MountedPiece<TProps, TMeta>> {
     if (piece instanceof Promise) {
         piece = await piece;
     }
     const mp = new MountedPieceClass(piece, mountPieceCore, this);
     await mp[mountKey](target, props);
-    return mp as MountedPiece<TProps, TCap>;
+    return mp as MountedPiece<TProps, TMeta>;
 }
 
 /**
@@ -38,14 +38,14 @@ export async function mountPieceCore<
  * @param target The target HTML element or shadow root where to mount the piece.
  * @param props The properties to pass to the piece.
  */
-export function mountPiece<TProps extends Record<string, any> = Record<string, any>, TCap extends Record<string, any> = {}>(
-    piece: CorePiece<TProps, TCap>,
+export function mountPiece<TProps extends Record<string, any> = Record<string, any>, TMeta extends Record<string, any> = {}>(
+    piece: CorePiece<TProps, TMeta>,
     target: AcceptableTarget,
     props?: TProps,
 ) {
     return mountPieceCore.call<
         MountedPiece | undefined,
-        [CorePiece<TProps, TCap> | Promise<CorePiece<TProps, TCap>>, AcceptableTarget, TProps?],
-        Promise<MountedPiece<TProps, TCap>>
+        [CorePiece<TProps, TMeta> | Promise<CorePiece<TProps, TMeta>>, AcceptableTarget, TProps?],
+        Promise<MountedPiece<TProps, TMeta>>
     >(undefined, piece, target, props);
 }

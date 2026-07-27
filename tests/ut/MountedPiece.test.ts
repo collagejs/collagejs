@@ -509,22 +509,22 @@ function testPrefix(shadow: boolean) {
                 expect(rollback).not.toHaveBeenCalled();
             });
         });
-        describe(`${testPrefix(shadow)}Capabilities`, () => {
-            it("Should forward the capabilities of the mounted piece correctly.", async () => {
+        describe(`${testPrefix(shadow)}Metadata`, () => {
+            it("Should forward the metadata of the mounted piece correctly.", async () => {
                 const testPiece: CorePiece = {
                     mount: async (target) => {
                         const div = document.createElement('div');
-                        div.id = 'capabilities-content';
+                        div.id = 'meta-content';
                         target.appendChild(div);
                         return async () => div.remove();
                     },
-                    capabilities: {
+                    meta: {
                         remountable: true,
                     }
                 };
 
                 const mp = new MountedPiece(testPiece, mountPieceCore);
-                expect(mp.capabilities?.remountable).to.be.true;
+                expect(mp.meta?.remountable).to.be.true;
             });
         });
     });

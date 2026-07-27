@@ -62,19 +62,19 @@ export type Update<TProps extends Record<string, any> = Record<string, any>> = U
  */
 export type Relocate = RelocateFn | RelocateFn[] | Relocate[];
 /**
- * Defines the capabilities of a `CorePiece` object recognized by the core *CollageJS* library.  These capabilities are
- * used to determine how the core library should handle the piece's lifecycle, or whether a particular action or
- * feature can be enabled or allowed.
+ * Defines the base metadata interface of `CorePiece` objects.  *CollageJS* projects are free to extend this interface
+ * with their own metadata properties, making sure the stock properties remain untouched.
  */
-export type CorePieceCapabilities = {
+export interface CorePieceMeta {
     /**
      * Informative only:  Indicates that the piece can be mounted more than once.
      *
-     * Since `@collagejs/core` never injects code into `CorePiece` objects, it cannot enforce this capability.  The
+     * Since `@collagejs/core` never injects code into `CorePiece` objects, it cannot enforce this behavior.  The
      * only place where this can be enforced is at `CorePiece.mount`.  The core library provides the `preventRemount()`
      * function to help developers create mount functions that throw an error if called more than once.
      *
-     * **💡TIP**:  Official framework adapters provide this functionality.
+     * **💡TIP**:  Official framework adapters provide this functionality by explicitly setting this meta value to
+     * `false` when calling the adapter's `buildPiece` function.
      */
     remountable?: boolean;
 }
@@ -83,7 +83,7 @@ export type CorePieceCapabilities = {
  */
 export interface CorePiece<
     TProps extends Record<string, any> = Record<string, any>,
-    TCap extends Record<string, any> = {}
+    TMeta extends Record<string, any> = {}
 > {
     /**
      * Mounts the piece (micro-frontend) in the document.  Every mount function should always return a cleanup function
@@ -129,33 +129,26 @@ export interface CorePiece<
      */
     relocate?: Relocate;
     /**
-     * Declares the capabilities of the piece.  This is optional.  If not provided, the piece will be assumed to have no
-     * capabilities.
+     * Carries the core piece's metadata.  This is optional, but when provided, *CollageJS* libraries will attempt to
+     * use its information depending on the situation and available data.
      *
-     * ### Notable Exception
+     * ### Official Framework Adapters
      *
-     * The library defines the `remountable` capability, which is informative only.  The core library cannot enforce
-     * this capability, so `CorePiece` developers should use the `preventRemount()` function (or equivalent) to throw an
-     * error if the piece is mounted more than once for pieces that cannot withstand multiple mountings.
+     * Framework adapters make use of the stock `meta.remountable` property to conditionally enforce the behavior,
+     * taking into account the individual framework's features.  Official framework adapters are therefore free to
+     * choose which default value for `meta.remountable` they will use while creating `CorePiece` objects.
      *
-     * Official framework adapters query the value of `capabilities.remountable` and act accordingly to their best
-     * ability, and at least emit a warning if a non-remountable piece is mounted more than once.
-     *
-     * Only the author of a `CorePiece` object can guarantee that the piece is remountable.  We encourage developers to
-     * be explicit about this capability when creating `CorePiece` objects.
-     *
-     * > ℹ️ **NOTE:**  Official framework adapters are free to choose which default value for `capabilities.remountable`
-     * > they will use while creating `CorePiece` objects when the property is not provided in order to maximize
-     * > framework feature usage (perhaps a framework can guarantee component state automatically, or perhaps it cannot).
+     * Still, if the value of `meta.remountable` is explicitly set to `false`, the framework adapter will enforce the
+     * behavior by injecting the `preventRemount()` function at the beginning of the `CorePiece.mount` array.
      */
-    readonly capabilities?: CorePieceCapabilities & TCap;
+    readonly meta?: CorePieceMeta & TMeta;
 };
 /**
  * Defines the shape of the object returned by the process of mounting a `CorePiece` object.
  */
 export interface MountedPiece<
     TProps extends Record<string, any> = Record<string, any>,
-    TCap extends Record<string, any> = {}
+    TMeta extends Record<string, any> = {}
 > {
     /**
      * Function used to apply updated property values to the mounted `CorePiece` object.
@@ -176,15 +169,15 @@ export interface MountedPiece<
      * **IMPORTANT:**  Always use this function instead of the global `mountPiece` function when mounting other
      * `CorePiece` objects inside the mounted `CorePiece` object to prevent lifecycle issues.
      */
-    mountPiece<UProps extends Record<string, any> = Record<string, any>, UCap extends Record<string, any> = {}>(
-        piece: CorePiece<UProps, UCap> | Promise<CorePiece<UProps, UCap>>,
+    mountPiece<UProps extends Record<string, any> = Record<string, any>, UMeta extends Record<string, any> = {}>(
+        piece: CorePiece<UProps, UMeta> | Promise<CorePiece<UProps, UMeta>>,
         target: AcceptableTarget,
         props?: UProps
-    ): Promise<MountedPiece<UProps, UCap>>;
+    ): Promise<MountedPiece<UProps, UMeta>>;
     /**
-     * The declared capabilities of the mounted `CorePiece` object.
+     * The declared metadata of the mounted `CorePiece` object.
      */
-    readonly capabilities: (CorePieceCapabilities & TCap) | undefined;
+    readonly meta: (CorePieceMeta & TMeta) | undefined;
 };
 /**
  * Type definition for the `mountPiece` functions that mount *CollageJS* pieces in the HTML document.
@@ -198,16 +191,16 @@ export interface MountedPiece<
  */
 export type MountPiece<
     TProps extends Record<string, any> = Record<string, any>,
-    TCap extends Record<string, any> = {}
+    TMeta extends Record<string, any> = {}
 > = (
-    piece: CorePiece<TProps, TCap> | Promise<CorePiece<TProps, TCap>>,
+    piece: CorePiece<TProps, TMeta> | Promise<CorePiece<TProps, TMeta>>,
     target: AcceptableTarget,
     props?: TProps
-) => Promise<MountedPiece<TProps, TCap>>;
+) => Promise<MountedPiece<TProps, TMeta>>;
 
 declare global {
     /**
-     * Defines the capabilities in the global `CollageJs` object.
+     * Defines the features in the global `CollageJs` object.
      */
     interface CollageJs { }
 
