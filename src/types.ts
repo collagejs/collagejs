@@ -77,6 +77,24 @@ export interface CorePieceMeta {
      * `false` when calling the adapter's `buildPiece` function.
      */
     remountable?: boolean;
+    /**
+     * Informative only:  Indicates that the piece can be relocated to a new parent without unmounting, or that at least
+     * it is its intention.
+     *
+     * **💡TIP**:  Official framework adapters always set this property according to the options specified during core
+     * piece construction.
+     *
+     * ### Composition of the `relocate` Lifecycle Function
+     *
+     * Because lifecycle functions can be composed by stacking functions in an array, the mere existence of a `relocate`
+     * function in a `CorePiece` object does not guarantee that the piece can be relocated.  The piece may have been
+     * composed with other functionality, maybe even a layer that attempts to give the piece relocation capabilities.
+     *
+     * There are many other cases, but in short:  Composition code should use this property to decide whether to
+     * compose the `relocate` lifecycle function or not, and should explicitly change its value to reflect the end
+     * result of the composition process, assuming it took place.
+     */
+    relocatable?: boolean | undefined;
 }
 /**
  * Defines the contract that objects must follow in order to be mountable as *CollageJS* pieces (micro-frontends).
