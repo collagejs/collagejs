@@ -1,8 +1,8 @@
 import type { MountFn } from "./types.js";
 
 /**
- * Creates a mount function that can only be called once. If the mount function is called more than once, it will throw
- * an error. This effectively prevents a piece from being mounted more than once.
+ * Creates a mount lifecycle function that can only be called once. If the mount function is called more than once, it
+ * will throw an error. This effectively prevents a piece from being mounted more than once.
  *
  * Use this on core piece objects that cannot guarantee the integrity of their state after they unmount.
  *
@@ -15,7 +15,7 @@ import type { MountFn } from "./types.js";
  *     // The most logical place is at the very beginning of the mount array.
  *     mount: [preventRemount(), myMount],
  *     update: ...,
- *     capabilities: {
+ *     meta: {
  *       // Informational only:  Allow the core piece object to answer the question.
  *       remountable: false,
  *     }
