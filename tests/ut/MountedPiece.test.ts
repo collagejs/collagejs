@@ -76,7 +76,7 @@ function testPrefix(shadow: boolean) {
         it(`${testPrefix(shadow)}Should handle parent-child relationships with proper cleanup.`, async () => {
             const target = createTarget(shadow);
 
-            const childPiece: CorePiece = {
+            const childPieceFactory = (unmountCb: () => void): CorePiece => ({
                 mount: async (target) => {
                     const childDiv = document.createElement('div');
                     childDiv.id = 'child-content';
@@ -84,10 +84,11 @@ function testPrefix(shadow: boolean) {
                     target.appendChild(childDiv);
 
                     return async () => {
+                        unmountCb();
                         childDiv.remove();
                     };
                 }
-            };
+            });
 
             const parentPiece: CorePiece = {
                 mount: async (target) => {
@@ -108,6 +109,11 @@ function testPrefix(shadow: boolean) {
                 }
             };
 
+            let unmountCount = 0;
+            const unmountCb = () => {
+                unmountCount++;
+            };
+
             // Mount parent
             const parentMp = new MountedPiece(parentPiece, mountPieceCore);
             await parentMp[mountKey](target);
@@ -115,13 +121,18 @@ function testPrefix(shadow: boolean) {
             expect(target.querySelector('#parent-content')).to.not.be.null;
             expect(target.querySelector('#child-container')).to.not.be.null;
 
-            // Mount child as child of parent
+            // Mount children inside parent
             const childContainer = target.querySelector('#child-container') as HTMLElement;
-            const childMp = new MountedPiece(childPiece, mountPieceCore, parentMp);
-            await childMp[mountKey](childContainer);
+            const childMp1 = new MountedPiece(childPieceFactory(unmountCb), mountPieceCore, parentMp);
+            await childMp1[mountKey](childContainer);
 
             expect(childContainer.children.length).to.equal(1);
             expect(childContainer.querySelector('#child-content')).to.not.be.null;
+
+            const childMp2 = new MountedPiece(childPieceFactory(unmountCb), mountPieceCore, parentMp);
+            await childMp2[mountKey](childContainer);
+
+            expect(childContainer.children.length).to.equal(2); // Both children should be present
 
             // Unmounting parent should also unmount child AND clean up the container
             await parentMp.unmount();
@@ -129,6 +140,7 @@ function testPrefix(shadow: boolean) {
             expect(target.querySelector('#parent-content')).to.be.null;
             expect(target.querySelector('#child-container')).to.be.null;
             expect(target.querySelector('#child-content')).to.be.null;
+            expect(unmountCount).to.equal(2); // Both children should have been unmounted
         });
 
         it(`${testPrefix(shadow)}Should handle array of mount functions.`, async () => {
