@@ -6,5 +6,6 @@
         "HTMX",
         "remountable",
         "solidjs"
-    ]
+    ],
+    "js/ts.experimental.useTsgo": false
 }
