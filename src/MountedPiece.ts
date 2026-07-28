@@ -22,17 +22,26 @@ async function doMount<
     mount: Mount<TProps>,
     target: AcceptableTarget,
     props?: TProps,
-): Promise<UnmountFn> {
+) {
     if (Array.isArray(mount)) {
         const unmountFns = new Stack<UnmountFn>();
         for (const m of mount) {
-            unmountFns.push(await doMount(m, target, props));
+            const unmountFn = await doMount(m, target, props);
+            if (unmountFn) {
+                unmountFns.push(unmountFn);
+            }
+        }
+        if (!unmountFns.size) {
+            return null;
         }
         return async () => {
             for (const u of unmountFns) {
                 await u();
             }
         };
+    }
+    if (!mount) {
+        return null;
     }
     return await mount(target, props);
 }
@@ -64,6 +73,7 @@ async function doRelocate(
     target: AcceptableTarget,
     newTarget: AcceptableTarget,
 ): Promise<RelocationResultValue | Stack<RelocationRollbackFn>> {
+    let allFalsy = true;
     const rollbackFns: Stack<RelocationRollbackFn> =
         new Stack<RelocationRollbackFn>();
     let safeState = true;
@@ -102,7 +112,10 @@ async function doRelocate(
             return supported ? "supported" : "done";
         }
         try {
-            const r = await rel(target, newTarget);
+            if (rel) {
+                allFalsy = false;
+            }
+            const r = !rel ? 'supported' : await rel?.(target, newTarget);
             maybePushRollback(r);
             return relocationResultValue(r);
         } catch (error) {
@@ -122,6 +135,9 @@ async function doRelocate(
         }
     };
     const internalResult = await doRelocateInternal(relocate);
+    if (allFalsy) {
+        return "unsupported";
+    }
     if (
         rollbackFns.size > 0 &&
         relocationResultValue(internalResult) === "supported" &&
@@ -168,7 +184,7 @@ export class MountedPiece<
         this.#cleanup = await doMount(this.#piece.mount, target, {
             ...(props as TProps),
             [mountPieceKey]: this.#mountPiece,
-        });
+        }) ?? undefined;
         if (this.#parent) {
             this.#parent.#childPieces.push(this);
         }
