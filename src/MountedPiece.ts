@@ -59,10 +59,14 @@ async function doUpdate<
     return await update(props);
 }
 
+function isReadonlyArray<T>(value: unknown): value is readonly T[] {
+    return Array.isArray(value);
+}
+
 function relocationResultValue(
     result: RelocationResult,
 ): RelocationResultValue {
-    if (Array.isArray(result)) {
+    if (isReadonlyArray(result)) {
         return result[0];
     }
     return result;
@@ -82,7 +86,7 @@ async function doRelocate(
     ): Promise<RelocationResultValue> => {
         const maybePushRollback = (result: RelocationResult) => {
             if (
-                Array.isArray(result) &&
+                isReadonlyArray(result) &&
                 (result[0] === "done" || result[0] === "supported")
             ) {
                 rollbackFns.push(result[1]);
