@@ -10,6 +10,11 @@ export type MountProps<TProps extends Record<string, any> = Record<string, any>>
     [x: symbol]: MountPiece<TProps>;
 };
 /**
+ * Defines the acceptable falsy values that can pass as a "valid" lifecycle function for DX purposes.  The values are
+ * merely skipped in the relevant algorithms.
+ */
+export type FalsyLifecycle = undefined | null | false;
+/**
  * Signature for unmount (cleanup) functions, including the ones returned by `CorePiece.mount()`.
  */
 export type UnmountFn = () => Promise<void>;
@@ -19,7 +24,7 @@ export type UnmountFn = () => Promise<void>;
  * @param props The piece's initial property values.
  * @returns A promise to the cleanup function that unmounts the piece.
  */
-export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: AcceptableTarget, props?: MountProps<TProps>) => Promise<UnmountFn>;
+export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: AcceptableTarget, props?: MountProps<TProps>) => Promise<UnmountFn | void>;
 /**
  * Supported return values of `CorePiece.relocate` functions.
  */
@@ -34,7 +39,7 @@ export type RelocationRollbackFn = () => Promise<void>;
 /**
  * Defines the possible return values of `CorePiece.relocate`.
  */
-export type RelocationResult = RelocationResultValue | [Exclude<RelocationResultValue, 'unsupported'>, RelocationRollbackFn];
+export type RelocationResult = RelocationResultValue | readonly [Exclude<RelocationResultValue, 'unsupported'>, RelocationRollbackFn];
 /**
  * Type that defines the signature of the functions accepted in `CorePiece.relocate`.
  * @param parent The current parent of the piece's root element(s).
@@ -52,15 +57,15 @@ export type UpdateFn<TProps extends Record<string, any> = Record<string, any>> =
 /**
  * Defines the accepted shapes for `CorePiece.mount`.
  */
-export type Mount<TProps extends Record<string, any> = Record<string, any>> = MountFn<TProps> | MountFn<TProps>[] | Mount<TProps>[];
+export type Mount<TProps extends Record<string, any> = Record<string, any>> = MountFn<TProps> | FalsyLifecycle | (MountFn<TProps> | FalsyLifecycle)[] | Mount<TProps>[];
 /**
  * Defines the accepted shapes for `CorePiece.update`.
  */
-export type Update<TProps extends Record<string, any> = Record<string, any>> = UpdateFn<TProps> | UpdateFn<TProps>[] | Update<TProps>[];
+export type Update<TProps extends Record<string, any> = Record<string, any>> = UpdateFn<TProps> | FalsyLifecycle | (UpdateFn<TProps> | FalsyLifecycle)[] | Update<TProps>[];
 /**
  * Defines the accepted shapes for `CorePiece.relocate`.
  */
-export type Relocate = RelocateFn | RelocateFn[] | Relocate[];
+export type Relocate = RelocateFn | FalsyLifecycle | (RelocateFn | FalsyLifecycle)[] | Relocate[];
 /**
  * Defines the base metadata interface of `CorePiece` objects.  *CollageJS* projects are free to extend this interface
  * with their own metadata properties, making sure the stock properties remain untouched.
