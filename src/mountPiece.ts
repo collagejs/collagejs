@@ -39,7 +39,7 @@ export async function mountPieceCore<
  * @param props The properties to pass to the piece.
  */
 export function mountPiece<TProps extends Record<string, any> = Record<string, any>, TMeta extends Record<string, any> = {}>(
-    piece: CorePiece<TProps, TMeta>,
+    piece: CorePiece<TProps, TMeta> | Promise<CorePiece<TProps, TMeta>>,
     target: AcceptableTarget,
     props?: TProps,
 ) {
