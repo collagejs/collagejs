@@ -7,7 +7,7 @@ export type AcceptableTarget = HTMLElement | ShadowRoot;
  * property of type `symbol` that carries the piece parent's `mountPiece()` function.
  */
 export type MountProps<TProps extends Record<string, any> = Record<string, any>> = TProps & {
-    [x: symbol]: MountPiece<TProps>;
+    [x: symbol]: MountPiece;
 };
 /**
  * Defines the acceptable falsy values that can pass as a "valid" lifecycle function for DX purposes.  The values are
