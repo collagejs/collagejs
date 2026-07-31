@@ -21,7 +21,7 @@ async function doMount<
 >(
     mount: Mount<TProps>,
     target: AcceptableTarget,
-    props?: TProps,
+    props: TProps,
 ) {
     if (Array.isArray(mount)) {
         const unmountFns = new Stack<UnmountFn>();

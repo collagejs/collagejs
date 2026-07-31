@@ -17,10 +17,10 @@ describe('mountPiece', () => {
 
     describe('mountPieceCore', () => {
         it('Should create MountedPiece with correct parameters and call mount method.', async () => {
-            const testPiece: CorePiece = {
-                mount: sinon.stub().resolves(sinon.stub())
-            };
             const props = { message: 'test' };
+            const testPiece = {
+                mount: sinon.stub().resolves(sinon.stub())
+            } satisfies CorePiece<typeof props>;
 
             // Create a mock MountedPiece constructor
             const mockInstance = {
@@ -32,7 +32,7 @@ describe('mountPiece', () => {
 
             const MockMountedPiece = sinon.stub().returns(mockInstance);
 
-            const result = await mountPieceCore.call(undefined, testPiece, target, props, MockMountedPiece as any);
+            const result = await mountPieceCore.bind(undefined)(testPiece, target, props, MockMountedPiece as any);
 
             // Verify constructor was called with correct arguments
             expect(MockMountedPiece.calledOnce).to.be.true;

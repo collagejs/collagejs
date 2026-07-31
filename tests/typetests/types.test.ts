@@ -44,6 +44,16 @@ describe("MountFn", () => {
         const mountFn: MountFn = async (target: AcceptableTarget) => Promise.resolve();
         expect(mountFn).type.toBe<MountFn>();
     });
+
+    test("Should accept a function that takes no parameters.", () => {
+        const fn = async () => Promise.resolve();
+        expect(fn).type.toBeAssignableTo<MountFn>();
+    });
+
+    test("Should accept a function that only takes the target parameter.", () => {
+        const fn = async (target: AcceptableTarget) => Promise.resolve();
+        expect(fn).type.toBeAssignableTo<MountFn>();
+    });
 });
 
 describe("UpdateFn", () => {

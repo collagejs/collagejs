@@ -30,7 +30,7 @@ import type { MountFn } from "./types.js";
  * discarded unnecessarily.
  * @returns A mount function that throws an error if called more than once.
  */
-export function preventRemount<TProps extends Record<string, any> = Record<string, any>>(): MountFn<TProps> {
+export function preventRemount() {
     let mountCount = 0;
     return () => {
         if (mountCount > 0) {
