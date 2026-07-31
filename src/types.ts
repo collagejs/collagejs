@@ -24,7 +24,7 @@ export type UnmountFn = () => Promise<void>;
  * @param props The piece's initial property values.
  * @returns A promise to the cleanup function that unmounts the piece.
  */
-export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: AcceptableTarget, props?: MountProps<TProps>) => Promise<UnmountFn | void>;
+export type MountFn<TProps extends Record<string, any> = Record<string, any>> = (target: AcceptableTarget, props: MountProps<TProps>) => Promise<UnmountFn | void>;
 /**
  * Supported return values of `CorePiece.relocate` functions.
  */
