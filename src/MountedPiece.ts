@@ -48,7 +48,7 @@ async function doMount<
 
 async function doUpdate<
     TProps extends Record<string, any> = Record<string, any>,
->(update: Update<TProps> | undefined, props: TProps) {
+>(update: Update<TProps> | undefined, props: Partial<TProps>) {
     if (!update) return;
     if (Array.isArray(update)) {
         for (const u of update) {
@@ -207,7 +207,7 @@ export class MountedPiece<
         this.#cleanup = undefined;
     }
 
-    update(props: TProps) {
+    update(props: Partial<TProps>) {
         return doUpdate(this.#piece.update, props);
     }
 

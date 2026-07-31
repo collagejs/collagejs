@@ -244,6 +244,7 @@ function testPrefix(shadow: boolean) {
                         };
                     },
                     update: async (props) => {
+                        if (!props.message) return;
                         const div = target.querySelector(
                             "#updateable-content",
                         ) as HTMLDivElement;
@@ -287,6 +288,7 @@ function testPrefix(shadow: boolean) {
                     },
                     update: [
                         async (props) => {
+                            if (!props.message) return;
                             const div1 = target.querySelector(
                                 "#updateable-content-1",
                             ) as HTMLDivElement;
@@ -295,6 +297,7 @@ function testPrefix(shadow: boolean) {
                             }
                         },
                         async (props) => {
+                            if (!props.message) return;
                             const div2 = target.querySelector(
                                 "#updateable-content-2",
                             ) as HTMLDivElement;
@@ -340,6 +343,7 @@ function testPrefix(shadow: boolean) {
                     update: [
                         false as const,
                         async (props) => {
+                            if (!props.message) return;
                             const div1 = target.querySelector(
                                 "#updateable-content-1",
                             ) as HTMLDivElement;
@@ -348,6 +352,7 @@ function testPrefix(shadow: boolean) {
                             }
                         },
                         async (props) => {
+                            if (!props.message) return;
                             const div2 = target.querySelector(
                                 "#updateable-content-2",
                             ) as HTMLDivElement;
