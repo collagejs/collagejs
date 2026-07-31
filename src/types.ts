@@ -53,7 +53,7 @@ export type RelocateFn = (parent: AcceptableTarget, newParent: AcceptableTarget)
  * @param props The new property values for the mounted piece.
  * @returns A promise that resolves once the process of updating property values concludes.
  */
-export type UpdateFn<TProps extends Record<string, any> = Record<string, any>> = (props: TProps) => Promise<void>;
+export type UpdateFn<TProps extends Record<string, any> = Record<string, any>> = (props: Partial<TProps>) => Promise<void>;
 /**
  * Defines the accepted shapes for `CorePiece.mount`.
  */

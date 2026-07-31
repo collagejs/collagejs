@@ -58,18 +58,23 @@ describe("MountFn", () => {
 
 describe("UpdateFn", () => {
     test("Should accept typed props.", () => {
-        const typedUpdate: UpdateFn<{ message: string }> = async (props: { message: string }) => {};
+        const typedUpdate = async (props: { message?: string }) => {};
         expect(typedUpdate).type.toBe<UpdateFn<{ message: string }>>();
     });
 
     test("Should not be callable without props.", () => {
-        const updateFn: UpdateFn<{ message: string }> = async (props: { message: string }) => {};
+        const updateFn = async (props: { message: string }) => {};
         expect(updateFn).type.not.toBeCallableWith();
     });
 
     test("Should be callable with correct props.", () => {
-        const updateFn: UpdateFn<{ message: string }> = async (props: { message: string }) => {};
-        expect(updateFn).type.toBeCallableWith({ message: "test" });
+        let updateFn: UpdateFn<{ message: string }>;
+        expect(updateFn!).type.toBeCallableWith({ message: "test" });
+    });
+
+    test("#30: Should allow required properties to be missing.", () => {
+        let updateFn: UpdateFn<{ message: string, optionalB?: boolean; }>;
+        expect(updateFn!).type.toBeCallableWith({ optionalB: true });
     });
 });
 
@@ -156,14 +161,14 @@ describe("Mount", () => {
 
 describe("Update", () => {
     test("Should accept single update function.", () => {
-        const singleUpdate: Update<{ message: string }> = async (props: { message: string }) => {};
+        const singleUpdate: Update<{ message: string }> = async (props: { message?: string }) => {};
         expect(singleUpdate).type.toBeAssignableTo<Update<{ message: string }>>();
     });
 
     test("Should accept array of update functions.", () => {
         const arrayUpdate: Update<{ message: string }> = [
-            async (props: { message: string }) => {},
-            async (props: { message: string }) => {}
+            async (props: { message?: string }) => {},
+            async (props: { message?: string }) => {}
         ];
         expect(arrayUpdate).type.toBeAssignableTo<Update<{ message: string }>>();
     });
@@ -175,7 +180,7 @@ describe("Update", () => {
 
     test("Should accept Boolean assignment syntax.", () => {
         let maybe: boolean;
-        expect(maybe! && (async (props: { message: string }) => {})).type.toBeAssignableTo<Update<{ message: string }>>();
+        expect(maybe! && (async (props: { message?: string }) => {})).type.toBeAssignableTo<Update<{ message: string }>>();
     });
 });
 
