@@ -422,6 +422,73 @@ function testPrefix(shadow: boolean) {
                 expect(result).to.be.false;
             });
 
+            it(`${testPrefix(shadow)}Should return false when the piece declares itself as not relocatable in metadata.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const piece = {
+                    mount: vi.fn(),
+                    meta: {
+                        relocatable: false,
+                    },
+                    relocate: vi.fn().mockResolvedValue("done"),
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(result).to.be.false;
+            });
+
+            it(`${testPrefix(shadow)}Should return false when the piece doesn't declare relocatable support in metadata and has no relocate function.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const piece = {
+                    mount: vi.fn(),
+                    meta: {
+                        relocatable: undefined,
+                    },
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(result).to.be.false;
+            });
+
+            it(`${testPrefix(shadow)}Should attempt relocation when the piece doesn't declare relocatable support in metadata but has a relocate function.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const piece = {
+                    mount: vi.fn(),
+                    meta: {
+                        relocatable: undefined,
+                    },
+                    relocate: vi.fn().mockResolvedValue("done"),
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(result).to.be.true;
+                expect(piece.relocate).toHaveBeenCalledWith(
+                    initialTarget,
+                    newTarget,
+                );
+            });
+
+            it(`${testPrefix(shadow)}Should return false when all relocation functions return 'unsupported'.`, async () => {
+                const initialTarget = createTarget(shadow);
+                const newTarget = createTarget(shadow);
+                const piece = {
+                    mount: vi.fn(),
+                    relocate: [
+                        vi.fn().mockResolvedValue("unsupported"),
+                        [vi.fn().mockResolvedValue("unsupported")],
+                    ],
+                };
+                const mp = new MountedPiece(piece, mountPieceCore);
+                await mp[mountKey](initialTarget);
+                const result = await mp.relocate(initialTarget, newTarget);
+                expect(result).to.be.false;
+            });
+
             it(`${testPrefix(shadow)}Should return true when all relocation functions return 'supported' or 'done' with at least one falsy function.`, async () => {
                 const initialTarget = createTarget(shadow);
                 const newTarget = createTarget(shadow);

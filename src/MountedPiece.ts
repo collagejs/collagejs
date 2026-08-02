@@ -219,8 +219,13 @@ export class MountedPiece<
             target: AcceptableTarget,
         ) => Promise<boolean>,
     ) {
-        if (!this.#piece.relocate) {
-            return Promise.resolve(false);
+        /*
+        Testing like this covers for the possibility of a piece not created by an official adapter which may have
+        forgotten to set the meta.relocatable property.  When the property is not set but there's something in the
+        relocate lifecycle, then the attempt should be made.
+        */
+        if (this.#piece.meta?.relocatable === false || !this.#piece.relocate) {
+            return false;
         }
         const result = await doRelocate(
             this.#piece.relocate,
